@@ -1,0 +1,10 @@
+# custom
+.vscode/
+.DS_Store
+*.sh
+test.*
+
+# Executables
+*.exe
+*.out
+*.app
