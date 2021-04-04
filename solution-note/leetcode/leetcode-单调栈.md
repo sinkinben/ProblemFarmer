@@ -14,17 +14,17 @@
 
 例如 `nums = [2,1,2,4,3]`，那么 `res = [1, -1, -1, 4, -1]` .
 
-从左往右扫描数组，栈底到栈顶维持严格升序，当扫描当前元素 `nums[i] = x` 时，如果需要出栈（说明栈顶大于等于当前的 `x` ），那么 `x` 就是**出栈元素**的下一个更小元素。
+从左往右扫描数组，栈底到栈顶维持升序（不要求严格），当扫描当前元素 `nums[i] = x` 时，如果需要出栈（说明栈顶严格大于当前的 `x` ），那么 `x` 就是**出栈元素**的下一个更小元素。
 
 ```cpp
-vector<int> nextSmallerNumber(vector<int> &&nums)
+vector<int> nextSmallerNumber(vector<int> &nums)
 {
     int n = nums.size(), idx = -1;
     vector<int> res(n, -1);
     stack<int> stk;
     for (int i = 0; i < n; i++)
     {
-        while (!stk.empty() && nums[i] <= nums[stk.top()])
+        while (!stk.empty() && nums[stk.top()] > nums[i])
         {
             idx = stk.top(), stk.pop();
             res[idx] = i;
@@ -219,7 +219,7 @@ vector<pair<int, int>> solve(vector<int> &nums)
     vector<pair<int, int>> res(n, {-1, -1});
     for (int i = 0; i < n; i++)
     {
-        while (!stk.empty() && nums[stk.top()] >= nums[i])
+        while (!stk.empty() && nums[stk.top()] > nums[i])
         {
             idx = stk.top(), stk.pop();
             res[idx].second = i;
