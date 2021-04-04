@@ -197,13 +197,57 @@ public:
 };
 ```
 
+### 滑动窗口的最大值
+
+题目：[239. 滑动窗口最大值](https://leetcode-cn.com/problems/sliding-window-maximum/)
+
+这里可以使用单调递减队列（不要求严格递减）。
+
+如果使用 `map<int,int>` 记录窗口内的数值的出现次数，每次插入操作需要 $O(\log{n})$，查找窗口的最大值是 `map.rbegin()` ，需要 $O(1)$ 时间。
+
+使用单调队列结构的话，插入窗口元素和查找最大值都是 $O(1)$ 。
+
+```cpp
+
+class Solution
+{
+public:
+    vector<int> maxSlidingWindow(vector<int> &nums, int k)
+    {
+        if (nums.empty()) return {};
+        int n = nums.size();
+        if (k >= n) k = n;
+        vector<int> res;
+        deque<int> q;
+        int l = 0, r = 0;
+        while (r < k)
+        {
+            while (!q.empty() && q.back() < nums[r]) q.pop_back();
+            q.emplace_back(nums[r++]);
+        }
+        res.emplace_back(q.front());
+        while (r < n)
+        {
+            if (q.front() == nums[l]) q.pop_front();
+            l++;
+            while (!q.empty() && q.back() < nums[r]) q.pop_back();
+            q.emplace_back(nums[r++]);
+            res.emplace_back(q.front());
+        }
+        return res;
+    }
+};
+```
+
+
+
 ## 其他
 
 ### 两侧的更小值 I
 
 题目：[两侧的更小值](https://www.nowcoder.com//practice/e3d18ffab9c543da8704ede8da578b55?tpId=101&tqId=33169&rp=1&ru=%2Fta%2Fprogrammer-code-interview-guide&qru=%2Fta%2Fprogrammer-code-interview-guide%2Fquestion-ranking&tab=answerKey)
 
-微软的面试题 😭 ，这是套「下一个更小元素」的模版。**此处不含重复元素**
+微软的面试题 😭 ，这是套「下一个更小元素」的模版。**此处不含重复元素**。
 
 维持一个**严格升序**的栈，当扫描当前元素 `nums[i] = x` 时，如果需要出栈（说明栈顶大于等于当前的 `x` ），那么 `x` 就是**出栈元素**的右侧更小值。那么，出栈元素的左侧更小值在哪呢？就是它在栈中的邻居。
 
@@ -290,11 +334,9 @@ vector<pair<int, int>> solve(vector<int> &nums)
             vector<int> buf = {idx};
             while (!stk.empty() && nums[stk.top()] == nums[idx])
                 buf.emplace_back(stk.top()), stk.pop();
+            int left = (stk.empty() ? -1 : stk.top());
             for (int x : buf)
-            {
-                res[x].first = (stk.empty() ? -1 : stk.top());
-                res[x].second = i;
-            }
+                res[x].first = left, res[x].second = i;
         }
         stk.emplace(i);
     }
@@ -304,10 +346,19 @@ vector<pair<int, int>> solve(vector<int> &nums)
         vector<int> buf = {idx};
         while (!stk.empty() && nums[stk.top()] == nums[idx])
             buf.emplace_back(stk.top()), stk.pop();
-        for (int x : buf)
-            res[x].first = (stk.empty() ? -1 : stk.top());
+        int left = (stk.empty() ? -1 : stk.top());
+        for (int x : buf) res[x].first = left;
     }
     return res;
+}
+int main()
+{
+    int n;
+    cin >> n;
+    vector<int> nums(n, 0);
+    for (int i = 0; i < n; i++) cin >> nums[i];
+    auto ans = solve(nums);
+    for (auto [x, y] : ans) printf("%d %d\n", x, y);
 }
 ```
 
