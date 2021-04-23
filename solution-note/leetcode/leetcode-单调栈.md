@@ -326,26 +326,28 @@ vector<pair<int, int>> solve(vector<int> &nums)
     int n = nums.size(), idx;
     stack<int> stk; // 递增栈，不要求严格
     vector<pair<int, int>> res(n, {-1, -1});
+
+    auto getSame = [&]() {
+        idx = stk.top(), stk.top();
+        vector<int> buf = {idx};
+        while (!stk.empty() && nums[stk.top()] == nums[idx])
+            buf.emplace_back(stk.top()), stk.pop();
+        return buf;
+    };
+
     for (int i = 0; i < n; i++)
     {
         while (!stk.empty() && nums[stk.top()] > nums[i])
         {
-            idx = stk.top(), stk.top();
-            vector<int> buf = {idx};
-            while (!stk.empty() && nums[stk.top()] == nums[idx])
-                buf.emplace_back(stk.top()), stk.pop();
+            auto buf = getSame();
             int left = (stk.empty() ? -1 : stk.top());
-            for (int x : buf)
-                res[x].first = left, res[x].second = i;
+            for (int x : buf) res[x].first = left, res[x].second = i;
         }
         stk.emplace(i);
     }
     while (!stk.empty())
     {
-        idx = stk.top(), stk.top();
-        vector<int> buf = {idx};
-        while (!stk.empty() && nums[stk.top()] == nums[idx])
-            buf.emplace_back(stk.top()), stk.pop();
+        auto buf = getSame();
         int left = (stk.empty() ? -1 : stk.top());
         for (int x : buf) res[x].first = left;
     }

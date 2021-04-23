@@ -211,28 +211,25 @@ Longest Common Subsequence, LCS.
 ```cpp
 class Solution {
 public:
-    int longestCommonSubsequence(string s1, string s2) 
+    int longestCommonSubsequence(string text1, string text2) 
     {
-        int len1 = s1.length(), len2 = s2.length();
-        if (len1 == 0 || len2 == 0) return 0;
-        vector<vector<int>> dp(len1, vector<int>(len2, 0));
-        dp[0][0] = s1[0] == s2[0];
-        for (int i=1; i<len1; i++) dp[i][0] = s1[i] == s2[0] || dp[i-1][0];
-        for (int j=1; j<len2; j++) dp[0][j] = s1[0] == s2[j] || dp[0][j-1];
-        for (int i=1; i<len1; i++)
+        int n1 = text1.length(), n2 = text2.length();
+        vector<vector<int>> dp(n1+1, vector<int>(n2+1, 0));
+        for (int i=1; i<=n1; i++)
         {
-            for (int j=1; j<len2; j++)
+            for (int j=1; j<=n2; j++)
             {
-                if (s1[i] == s2[j]) dp[i][j] = dp[i-1][j-1] + 1;
+                if (text1[i-1] == text2[j-1]) dp[i][j] = dp[i-1][j-1]+1;
                 else dp[i][j] = max(dp[i-1][j], dp[i][j-1]);
             }
         }
-        return dp.back().back();
+        return dp[n1][n2];
     }
 };
-// dp[i, j] 是 s1[0, ..., i] 与 s2[0, ..., j] 的 LCS 的长度
-// dp[i, j] = dp[i-1, j-1] + 1             if s1[i] == s2[j]
-// dp[i, j] = max(dp[i-1, j], dp[i, j-1])  if s1[i] != s2[j]
+
+// dp[i, j] 是 s1 前 i 个字符与 s2 前 j 个字符的 LCS
+// dp[i, j] = dp[i-1, j-1] + 1 if s[i-1] == s[j-1]
+// dp[i, j] = max(dp[i-1, j], dp[i, j-1]) otherwise
 ```
 
 
