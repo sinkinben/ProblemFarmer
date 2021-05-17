@@ -1,50 +1,48 @@
-#include <queue>
 #include "leetcode.h"
+#include <queue>
+#include <unordered_set>
 class Solution
 {
 public:
+    bool check(deque<pair<TreeNode *, TreeNode *>> &deq, int x, int y)
+    {
+        auto xitor = deq.end(), yitor = deq.end();
+        for (auto i = deq.begin(); i != deq.end(); i++)
+        {
+            if (xitor != deq.end() && yitor != deq.end())
+                break;
+            if (i->first->val == x)
+                xitor = i;
+            if (i->first->val == y)
+                yitor = i;
+        }
+        return xitor->second != yitor->second;
+    }
     bool isCousins(TreeNode *root, int x, int y)
     {
         if (root == nullptr)
             return false;
-        queue<TreeNode *> q;
-        TreeNode *xparent = nullptr, *yparent = nullptr;
-        auto p = root;
-        q.emplace(p);
-        while (!q.empty())
+        deque<pair<TreeNode *, TreeNode *>> cur;
+        cur.emplace_back(root, nullptr);
+        while (!cur.empty())
         {
-            queue<TreeNode *> nextlevel;
-            while (!q.empty())
+            deque<pair<TreeNode *, TreeNode *>> next;
+            while (!cur.empty())
             {
-                p = q.front(), q.pop();
-                if (p->left)
-                {
-                    nextlevel.emplace(p->left);
-                    if (x == p->left->val)
-                        xparent = p;
-                    if (y == p->left->val)
-                        yparent = p;
-                }
-                if (p->right)
-                {
-                    nextlevel.emplace(p->right);
-                    if (x == p->right->val)
-                        xparent = p;
-                    if (y == p->right->val)
-                        yparent = p;
-                }
+                auto [node, parent] = cur.front();
+                cur.pop_front();
+                if (node->left)
+                    next.emplace_back(node->left, node);
+                if (node->right)
+                    next.emplace_back(node->left, node);
             }
-            q = nextlevel;
-            // not found yet
-            if (xparent == nullptr && yparent == nullptr)
-                continue;
-            // not same level
-            if ((xparent == nullptr) ^ (yparent == nullptr))
-                return false;
-            // found at same level
-            return xparent != yparent;
+            if (check(next, x, y))
+                return true;
+            cur = move(next);
         }
-        // can not be here
         return false;
     }
 };
+int main()
+{
+}
