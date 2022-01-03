@@ -1,10 +1,4 @@
-## A Pattern to Solve Backtracking Problem
-
-Backtracking tag of leetcode:
-
-- Subset
-- Subset - II
-- N Queen
+## A Pattern to Solve Backtracking Problems
 
 The backtracking solutions of most leetcode-problems have a similar pattern. Let's take a look on it.
 
@@ -650,13 +644,13 @@ How can we distinguish these two cases? A simple way is that:
 
 The 2nd issue is whether to use `backtrack(idx + 1)` or `backtrack(i + 1)`.
 
-- In "N Queens" problem, we use `backtrack(idx + 1)`.
 - In some cases, we use `backtrack(i + 1)`.
+- In "N-Queens" and "Permutations" problem, we use `backtrack(idx + 1)`.
 
-Why? This depends on who is the definition of "next possible value".
+Why? This depends on what is the definition of "next possible value".
 
-- In "Subset", "Permutations", "Combination Sum" and "Palindrome Partition", the next posibble value is `nums[i + 1]` or `s[i + 1]`, we try to put it into the current state. Here `backtrack(j)` means try `nums[j]` or `s[j]`.
-- While in "N-Queens", for position `pos[idx]`, we want to try all the column-index on postion `pos[idx]`. Therefore, if `pos[0, ..., idx]` is a possible solution, we should continue to try on `pos[idx + 1]`. Here `backtrack(j)` means we try to put j-th queen on column-index range from `0` to `n-1`.
+- For "Subset", "Combination Sum" and "Palindrome Partition", the next posibble value is `nums[i + 1]` or `s[i + 1]`, we try to put it into the current state. Here `backtrack(j)` means try `nums[j]` or `s[j]`.
+- While for the "N-Queens" and "Permutations", for position `pos[idx]`, we want to try all the column-index on postion `pos[idx]`. Therefore, if `pos[0, ..., idx]` is a possible solution, we should continue to try on `pos[idx + 1]`. In "N-Queen", `backtrack(j)` means we try to put j-th queen on column-index range from `0` to `n-1`.
 - The most distinct difference between these two kind of problems is that, a solution of first one is **non-fixed length**, while the second one is **fixed-length**.
 
 
@@ -683,11 +677,11 @@ public:
             res.emplace_back(seq);
             return;
         }
-        for (int i = 1; i <= n; ++i)  // for each seq[idx], we try every possible number
+        for (int i = 1; i <= n; ++i)  // O(n!) state space
         {
             if (idx > 0 && i <= seq[idx - 1]) continue; // the combination pair require increasing order
             seq[idx] = i;
-            backtrack(idx + 1, n, k); // try next position
+            backtrack(idx + 1, n, k); // try next position, fixed-length
             seq[idx] = -1;
         }
     }
