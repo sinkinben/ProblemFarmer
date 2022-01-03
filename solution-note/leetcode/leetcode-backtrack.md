@@ -563,7 +563,7 @@ public:
 
 
 
-## N-Quees II
+## N-Queens II
 
 It's an easy problem if we have solve the "N-Queens" with iteration solution.
 
@@ -614,21 +614,21 @@ vector<vector<int>> res;
 vector<int> cur;
 vector<vector<int>> solution()
 {
-	backtrack(..., 0);
+    backtrack(..., 0);
     return res;
 }
 backtrack(..., int idx)
 {
-	if cur is satisfied with some conditions
+    if cur is satisfied with some conditions
     {
         // add current values into final result, and return
     }
     for (i = idx; i < n; i++)      // or for (i = 0; i < n; i++)
     {
-        cur[idx] = value of i      // try each possible value on current position idx
-        if (cur[idx] is possible)  // if cur[idx] maybe a possible solution
+        cur.push_back(value of i)  // try each possible value on current position idx, or cur[idx] = i
+        if (cur is possible)       // if cur[idx]/cur.back() maybe a possible solution
             backtrack(..., i + 1)  // try next one based on current state, or backtrack(..., idx + 1)
-        cur.pop_back(...)          // pop the value we have tried
+        cur.pop_back()             // pop the value we have tried, or reset cur[idx]
     }
 }
 ```
@@ -650,14 +650,22 @@ The 2nd issue is whether to use `backtrack(idx + 1)` or `backtrack(i + 1)`.
 Why? This depends on what is the definition of "next possible value".
 
 - For "Subset", "Combination Sum" and "Palindrome Partition", the next posibble value is `nums[i + 1]` or `s[i + 1]`, we try to put it into the current state. Here `backtrack(j)` means try `nums[j]` or `s[j]`.
-- While for the "N-Queens" and "Permutations", for position `pos[idx]`, we want to try all the column-index on postion `pos[idx]`. Therefore, if `pos[0, ..., idx]` is a possible solution, we should continue to try on `pos[idx + 1]`. In "N-Queen", `backtrack(j)` means we try to put j-th queen on column-index range from `0` to `n-1`.
-- The most distinct difference between these two kind of problems is that, a solution of first one is **non-fixed length**, while the second one is **fixed-length**.
+- However, for the "N-Queens" (and "Permutations"), the position `pos[idx]`, we want to try all the column-index on postion `pos[idx]`. Therefore, if `pos[0, ..., idx]` is a possible solution, we should continue to try on `pos[idx + 1]`. In "N-Queen", `backtrack(j)` means we try to put j-th queen on column-index range from `0` to `n-1`.
+- The most distinct (and essential) difference between these two kind of problems is that, a solution of first one is **non-fixed length**, while the second one is **fixed-length**. And the argument `idx` of `backtrack(idx)` have different meanings.
 
 
 
-For these two issues, please learn how to distinguish them via passing the [77. Combainations](https://leetcode.com/problems/combinations/).
+For these two issues, please learn how to distinguish them via passing these homework:
 
-Here is my code. This problem is `O(n!)` state space.
+- [77. Combainations](https://leetcode.com/problems/combinations/)
+- [216. Combination Sum III](https://leetcode.com/problems/combination-sum-iii/)
+- [22. Generate Parentheses](https://leetcode.com/problems/generate-parentheses)
+
+
+
+**72 - Combinations**
+
+This problem is `O(n!)` state space.
 
 ```cpp
 class Solution {
@@ -684,6 +692,90 @@ public:
             backtrack(idx + 1, n, k); // try next position, fixed-length
             seq[idx] = -1;
         }
+    }
+};
+```
+
+<br/>
+
+**216. Combination Sum III**
+
+The solution of this problem is **fixed-length**, and it has `O(9!)` state space.
+
+```cpp
+class Solution {
+public:
+    vector<vector<int>> res;
+    vector<int> seq;
+    vector<vector<int>> combinationSum3(int k, int n) 
+    {
+        seq.resize(k, 0);
+        backtrack(0, 0, k, n);
+        return res;
+    }
+    
+    void backtrack(int idx, int cur, int k, int n)
+    {
+        if (idx >= k)
+        {
+            if (cur == n) res.emplace_back(seq);
+            return;
+        }
+        for (int i = 1; i <= 9; ++i)
+        {
+            if (idx > 0 && i <= seq[idx - 1]) continue;  // the pairs require increasing order
+            seq[idx] = i;
+            backtrack(idx + 1, cur + i, k, n);
+            seq[idx] = 0;
+        }
+    }
+};
+```
+
+<br/>
+
+**22. Generate Parentheses**
+
+It is totally backtracking template problem.
+
+- Since each solution is in fixed-length `2n`.
+- Each position of a solution, has 2 possible values `'('` and `')'` .
+
+```cpp
+class Solution {
+public:
+    vector<string> res;
+    string seq;
+    vector<string> generateParenthesis(int n) {
+        seq.resize(n << 1, ' ');
+        backtrack(0, n);
+        return res;
+    }
+    
+    void backtrack(int idx, int n)
+    {
+        if (idx >= (n << 1))
+        {
+            if (check(seq)) res.emplace_back(seq);
+            return;
+        }
+        static const char values[2] = {'(', ')'};
+        for (char val : values)
+        {
+            seq[idx] = val;
+            backtrack(idx + 1, n);
+            seq[idx] = ' ';
+        }
+    }
+    bool check(string &s)
+    {
+        int cnt = 0;
+        for (char x : s)
+        {
+            cnt += x == '(', cnt -= x == ')';
+            if (cnt < 0) return false;
+        }
+        return cnt == 0;
     }
 };
 ```
