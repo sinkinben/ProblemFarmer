@@ -1,4 +1,4 @@
-## Backtracking
+## A Pattern to Solve Backtracking Problem
 
 Backtracking tag of leetcode:
 
@@ -648,13 +648,49 @@ How can we distinguish these two cases? A simple way is that:
 - Start from  `i = idx` when the state space is `O(2^n)`.
 - Start from `i = 0` when the state space is `O(n!)` .
 
-The second one is whether to use `backtrack(idx + 1)` or `backtrack(i + 1)`.
+The 2nd issue is whether to use `backtrack(idx + 1)` or `backtrack(i + 1)`.
 
 - In "N Queens" problem, we use `backtrack(idx + 1)`.
-- In other cases, we use `backtrack(i + 1)`.
+- In some cases, we use `backtrack(i + 1)`.
 
 Why? This depends on who is the definition of "next possible value".
 
 - In "Subset", "Permutations", "Combination Sum" and "Palindrome Partition", the next posibble value is `nums[i + 1]` or `s[i + 1]`, we try to put it into the current state. Here `backtrack(j)` means try `nums[j]` or `s[j]`.
 - While in "N-Queens", for position `pos[idx]`, we want to try all the column-index on postion `pos[idx]`. Therefore, if `pos[0, ..., idx]` is a possible solution, we should continue to try on `pos[idx + 1]`. Here `backtrack(j)` means we try to put j-th queen on column-index range from `0` to `n-1`.
+- The most distinct difference between these two kind of problems is that, a solution of first one is **non-fixed length**, while the second one is **fixed-length**.
+
+
+
+For these two issues, please learn how to distinguish them via passing the [77. Combainations](https://leetcode.com/problems/combinations/).
+
+Here is my code. This problem is `O(n!)` state space.
+
+```cpp
+class Solution {
+public:
+    vector<vector<int>> res;
+    vector<int> seq;
+    vector<vector<int>> combine(int n, int k) 
+    {
+        seq.resize(k, -1);
+        backtrack(0, n, k);
+        return res;
+    }
+    void backtrack(int idx, int n, int k)
+    {
+        if (idx >= k)
+        {
+            res.emplace_back(seq);
+            return;
+        }
+        for (int i = 1; i <= n; ++i)  // for each seq[idx], we try every possible number
+        {
+            if (idx > 0 && i <= seq[idx - 1]) continue; // the combination pair require increasing order
+            seq[idx] = i;
+            backtrack(idx + 1, n, k); // try next position
+            seq[idx] = -1;
+        }
+    }
+};
+```
 
