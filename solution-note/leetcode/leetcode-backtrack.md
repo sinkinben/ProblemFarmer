@@ -346,15 +346,315 @@ public:
 };
 ```
 
+
+
 ##  Palindrome Partitioning
 
-TBD.
+**1. Backtracking**
+
+Time complexity is `O(n * 2^n)`, since for each letter range from `0` to `n-1`, we have two choices (split it or not), and for each choice, we need to check whether if it is palindrome in `O(n)` time.
+
+```cpp
+class Solution {
+public:
+    vector<vector<string>> res;
+    vector<string> buf;
+    int n;
+    vector<vector<string>> partition(string s) 
+    {
+        n = s.length();
+        backtrack(s, 0);
+        return res;
+    }
+    
+    void backtrack(string &s, int idx)
+    {
+        if (idx >= n)
+        {
+            res.emplace_back(buf);
+            return;
+        }
+        for (int i = idx; i < n; ++i)
+        {
+            if (check(s, idx, i))
+            {
+                buf.emplace_back(s.substr(idx, i - idx + 1));
+                backtrack(s, i + 1);
+                buf.pop_back();
+            }
+        }
+    }
+    bool check(string &s, int start, int end)
+    {
+        while (start < end)
+        {
+            if (s[start] != s[end]) return false;
+            start++, end--;
+        }
+        return true;
+    }
+};
+```
+
+<br/>
+
+**2. Dynamic Programming Optimization**
+
+We can pre-process for each postion pair `<i, j>`, store the result whether if `s[i - j]` is palindrome in array `dp`. Hence we can optimize `check()` method above into `O(1)` time.
+
+Are the time complexity of this solution `O(2^n)` ? The answer is NO. See the internal function call `s.substr`, which need `O(n)` time. Hence the time complexity here is still `O(n * 2 ^ n)`.
+
+```cpp
+class Solution {
+public:
+    vector<vector<string>> res;
+    vector<string> buf;
+    vector<vector<bool>> dp;
+    int n;
+    vector<vector<string>> partition(string s) {
+        n = s.length();
+        dp.resize(n, vector<bool>(n, true)); // an empty string is always palindrome
+        for (int i = n - 1; i >= 0; --i)
+        {
+            dp[i][i] = true; 
+            for (int j = i + 1; j < n; ++j)
+                dp[i][j] = s[i] == s[j] && dp[i + 1][j - 1];
+        }
+        backtrack(s, 0);
+        return res;
+    }
+    
+    void backtrack(string &s, int idx)
+    {
+        if (idx >= n)
+        {
+            res.emplace_back(buf);
+            return;
+        }
+        for (int i = idx; i < n; ++i)
+        {
+            if (dp[idx][i])
+            {
+                buf.emplace_back(s.substr(idx, i - idx + 1));
+                backtrack(s, i + 1);
+                buf.pop_back();
+            }
+        }
+    }
+};
+
+// dp[i, j] = dp[i+1, j-1] && s[i] == s[j] (j > i)
+```
 
 
 
-## N-Queen
+**3. Memor Search**
 
-TBD.
+Based on the "backtracking" solution above, we just change the `check` method into:
+
+```cpp
+unordered_map<int, unordered_map<int, bool>> table;
+bool check(string &s, int start, int end)
+{
+    if (start >= end) return true;
+    if (table.count(start) && table[start].count(end)) return table[start][end];
+    return table[start][end] = (s[start] == s[end]) && check(s, start + 1, end - 1);
+}
+```
 
 
+
+## N-Queens
+
+**1. Backtracking (Recursion)**
+
+We assume that each queen is on different rows, and `pos[i]` denote her column-index of the board. i.e. `<i, pos[i]>` means the i-th queen is on i-th row, `pos[i]`-th column.
+
+```cpp
+class Solution {
+public:
+    vector<vector<string>> res;
+    vector<int> pos;
+    int n;
+    vector<vector<string>> solveNQueens(int n) 
+    {
+        this->n = n;
+        pos.resize(n, -1);
+        backtrack(0);
+        return res;
+    }
+    
+    void backtrack(int idx)
+    {
+        if (idx >= n)
+        {
+            res.emplace_back(generate(pos));
+            return;
+        }
+        for (int i = 0; i < n; ++i)
+        {
+            pos[idx] = i;
+            if (check(idx)) backtrack(idx + 1); // pay attention to this idx + 1
+        }
+    }
+    
+    bool check(int idx)
+    {
+        for (int i = 0; i < idx; ++i)
+            if (pos[idx] == pos[i] || idx - i == abs(pos[idx] - pos[i]))
+                return false;
+        return true;
+    }
+    
+    vector<string> generate(vector<int> &pos)
+    {
+        vector<string> ret(n, string(n, '.'));
+        for (int i = 0; i < n; i++)
+            ret[i][pos[i]] = 'Q';
+        return move(ret);
+    }
+};
+```
+
+<br/>
+
+**2. Iteration**
+
+```cpp
+class Solution {
+public:
+    vector<vector<string>> res;
+    vector<int> pos;
+    vector<vector<string>> solveNQueens(int n) 
+    {
+        pos.resize(n, -1);
+        int cur = 0;
+        while (cur >= 0)
+        {
+            while (pos[cur] < n)
+            {
+                if (++pos[cur] >= n) break; // for current queen, try every column
+                if (check(cur))
+                {
+                    if (cur < n - 1) ++cur; // not a completed solution
+                    else if (cur == n - 1)
+                    {
+                        res.emplace_back(generate(pos, n));
+                        break;
+                    }
+                }
+            }
+            pos[cur] = -1, cur--;
+        }
+        return res;
+    }
+    
+    bool check(int idx)
+    {
+        for (int i = 0; i < idx; ++i)
+            if (pos[idx] == pos[i] || idx - i == abs(pos[idx] - pos[i]))
+                return false;
+        return true;
+    }
+    
+    vector<string> generate(vector<int> &pos, int n)
+    {
+        vector<string> ret(n, string(n, '.'));
+        for (int i = 0; i < n; i++)
+            ret[i][pos[i]] = 'Q';
+        return move(ret);
+    }
+};
+```
+
+
+
+## N-Quees II
+
+It's an easy problem if we have solve the "N-Queens" with iteration solution.
+
+```cpp
+class Solution {
+public:
+    int totalNQueens(int n) {
+        vector<int> pos(n, -1);
+        int cur = 0, res = 0;
+        while (cur >= 0)
+        {
+            while (pos[cur] < n)
+            {
+                if (++pos[cur] >= n) break;
+                if (check(pos, cur))
+                {
+                    if (cur < n - 1) ++cur;
+                    else
+                    {
+                        ++res;
+                        break;
+                    }
+                    
+                }
+            }
+            pos[cur--] = -1;
+        }
+        return res;
+    }
+    bool check(vector<int> &pos, int idx)
+    {
+        for (int i = 0; i < idx; ++i)
+            if (pos[i] == -1 || pos[i] == pos[idx] || idx - i == abs(pos[idx] - pos[i]))
+                return false;
+        return true;
+    }
+};
+```
+
+
+
+## Summary
+
+We can see that the backtracking (recursion) pattern is similar in these problem.
+
+```cpp
+vector<vector<int>> res;
+vector<int> cur;
+vector<vector<int>> solution()
+{
+	backtrack(..., 0);
+    return res;
+}
+backtrack(..., int idx)
+{
+	if cur is satisfied with some conditions
+    {
+        // add current values into final result, and return
+    }
+    for (i = idx; i < n; i++)      // or for (i = 0; i < n; i++)
+    {
+        cur[idx] = value of i      // try each possible value on current position idx
+        if (cur[idx] is possible)  // if cur[idx] maybe a possible solution
+            backtrack(..., i + 1)  // try next one based on current state, or backtrack(..., idx + 1)
+        cur.pop_back(...)          // pop the value we have tried
+    }
+}
+```
+
+And there are two issues if we used this code template.
+
+For the 1st issue, please note that, in the for-loop in `backtrack`, most of times we start from `i = idx`, while sometimes we start from `i = 0` (e.g. the "Permutations" problem and "Permutations II" problem) .
+
+How can we distinguish these two cases? A simple way is that:
+
+- Start from  `i = idx` when the state space is `O(2^n)`.
+- Start from `i = 0` when the state space is `O(n!)` .
+
+The second one is whether to use `backtrack(idx + 1)` or `backtrack(i + 1)`.
+
+- In "N Queens" problem, we use `backtrack(idx + 1)`.
+- In other cases, we use `backtrack(i + 1)`.
+
+Why? This depends on who is the definition of "next possible value".
+
+- In "Subset", "Permutations", "Combination Sum" and "Palindrome Partition", the next posibble value is `nums[i + 1]` or `s[i + 1]`, we try to put it into the current state. Here `backtrack(j)` means try `nums[j]` or `s[j]`.
+- While in "N-Queens", for position `pos[idx]`, we want to try all the column-index on postion `pos[idx]`. Therefore, if `pos[0, ..., idx]` is a possible solution, we should continue to try on `pos[idx + 1]`. Here `backtrack(j)` means we try to put j-th queen on column-index range from `0` to `n-1`.
 
