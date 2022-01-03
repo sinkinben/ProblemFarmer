@@ -736,10 +736,10 @@ public:
 
 **22. Generate Parentheses**
 
-It is totally backtracking template problem.
+It is totally backtracking template problem, since
 
-- Since each solution is in fixed-length `2n`.
-- Each position of a solution, has 2 possible values `'('` and `')'` .
+- each solution is in fixed-length `2n`, and
+- each position of a solution, has 2 possible values `'('` and `')'` .
 
 ```cpp
 class Solution {
