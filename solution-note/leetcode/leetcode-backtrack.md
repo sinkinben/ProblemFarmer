@@ -660,6 +660,7 @@ For these two issues, please learn how to distinguish them via passing these hom
 - [77. Combainations](https://leetcode.com/problems/combinations/)
 - [216. Combination Sum III](https://leetcode.com/problems/combination-sum-iii/)
 - [22. Generate Parentheses](https://leetcode.com/problems/generate-parentheses)
+- [17. Letter Combinations of a Phone Number](https://leetcode.com/problems/letter-combinations-of-a-phone-number/)
 
 
 
@@ -776,6 +777,46 @@ public:
             if (cnt < 0) return false;
         }
         return cnt == 0;
+    }
+};
+```
+
+<br/>
+
+**17. Letter Combinations of a Phone Number**
+
+Features of this problem: it is fixed-length, and has `O(2^n)` state space.
+
+```cpp
+class Solution {
+public:
+    const string letters[10] = {"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+    int n;
+    string seq;
+    vector<string> res;
+    vector<string> letterCombinations(string digits) 
+    {
+        n = digits.size();
+        if (n == 0) return res;
+        
+        seq.resize(n, ' ');
+        backtrack(digits, 0);
+        return res;
+    }
+    
+    void backtrack(string &digits, int idx)
+    {
+        if (idx >= n)
+        {
+            res.emplace_back(seq);
+            return;
+        }
+        for (char x : letters[digits[idx] - '0'])
+        {
+            seq[idx] = x;
+            backtrack(digits, idx + 1);
+            seq[idx] = ' ';
+        }
     }
 };
 ```
