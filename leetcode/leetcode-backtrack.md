@@ -639,7 +639,7 @@ For the 1st issue, please note that, in the for-loop in `backtrack`, most of tim
 
 How can we distinguish these two cases? A simple way is that:
 
-- Start from  `i = idx` when the state space is `O(2^n)`.
+- Start from  `i = idx` when the state space is `O(2^n)` (or equivalent exponential space).
 - Start from `i = 0` when the state space is `O(n!)` .
 
 The 2nd issue is whether to use `backtrack(idx + 1)` or `backtrack(i + 1)`.
@@ -661,10 +661,11 @@ For these two issues, please learn how to distinguish them via passing these hom
 - [216. Combination Sum III](https://leetcode.com/problems/combination-sum-iii/)
 - [22. Generate Parentheses](https://leetcode.com/problems/generate-parentheses)
 - [17. Letter Combinations of a Phone Number](https://leetcode.com/problems/letter-combinations-of-a-phone-number/)
+- [306. Additive Number](https://leetcode.com/problems/additive-number/)
 
 
 
-**72 - Combinations**
+### Combinations
 
 This problem is `O(n!)` state space.
 
@@ -699,7 +700,7 @@ public:
 
 <br/>
 
-**216. Combination Sum III**
+### Combination Sum III
 
 The solution of this problem is **fixed-length**, and it has `O(9!)` state space.
 
@@ -735,7 +736,7 @@ public:
 
 <br/>
 
-**22. Generate Parentheses**
+### Generate Parentheses
 
 It is totally backtracking template problem, since
 
@@ -783,7 +784,7 @@ public:
 
 <br/>
 
-**17. Letter Combinations of a Phone Number**
+### Phone Number
 
 Features of this problem: it is fixed-length, and has `O(2^n)` state space.
 
@@ -817,6 +818,77 @@ public:
             backtrack(digits, idx + 1);
             seq[idx] = ' ';
         }
+    }
+};
+```
+
+
+
+### Additive Number
+
+```cpp
+class Solution {
+public:
+    vector<string> buf;
+    bool ret = false;
+    int n;
+    bool isAdditiveNumber(string s) 
+    {
+        n = s.length();
+        backtrack(s, 0);
+        return ret;
+    }
+    void backtrack(string &s, int idx)
+    {
+        if (ret) return;
+        if (buf.size() >= 3)
+        {
+            if (!checkBuffer()) return;
+            if (idx >= n)
+            {
+                ret = true;
+                return;
+            }
+        }
+        for (int i = idx; i < n; ++i)
+        {
+            buf.emplace_back(s.substr(idx, i - idx + 1));
+            /* the solution for this problem is not fixed-length */
+            backtrack(s, i + 1);
+            buf.pop_back();
+        }
+    }
+    
+    bool checkBuffer()
+    {
+        int n = buf.size();
+        
+        string &a = buf[n - 3], &b = buf[n - 2], &c = buf[n - 1];
+        
+        if (a.length() > 1 && a[0] == '0' || 
+            b.length() > 1 && b[0] == '0' || 
+            c.length() > 1 && c[0] == '0') return false;
+        return bigIntegerAdd(a, b) == c;
+    }
+    
+    string bigIntegerAdd(const string &a, const string &b)
+    {
+        int alen = a.length(), blen = b.length();
+        string res(max(alen, blen) + 1, '0');
+        int i = alen - 1, j = blen - 1, val = 0, carry = 0;
+        int ptr = res.length() - 1;
+        while (i >= 0 || j >= 0)
+        {
+            val = carry;
+            if (i >= 0) val += (a[i--] - '0');
+            if (j >= 0) val += (b[j--] - '0');
+            carry = (val >= 10);
+            val %= 10;
+            res[ptr--] = val + '0';
+        }
+        if (carry) res[ptr--] = 1 + '0';
+        if (res[0] == '0' && res.length() > 1) res.erase(res.begin());
+        return res;
     }
 };
 ```
