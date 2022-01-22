@@ -5,12 +5,15 @@ Problems:
 - [200. Number of Islands](https://leetcode.com/problems/number-of-islands/)
 - [305. Number of Islands II](https://leetcode-cn.com/problems/number-of-islands-ii/)
 - [694. Number of Distinct Islands](https://leetcode-cn.com/problems/number-of-distinct-islands/)
+- [711. Number of Distinct Islands II](https://leetcode-cn.com/problems/number-of-distinct-islands-ii/)
 
 
 
 ## Num of Islands
 
 Here we will show two solutions for this problem, disjoint set (union find) and DFS.
+
+<br/>
 
 **1. Union Find (Disjoint Set)**
 
