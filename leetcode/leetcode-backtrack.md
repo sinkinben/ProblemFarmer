@@ -565,6 +565,8 @@ public:
 
 ## N-Queens II
 
+**1. Iteration**
+
 It's an easy problem if we have solve the "N-Queens" with iteration solution.
 
 ```cpp
@@ -598,6 +600,47 @@ public:
         for (int i = 0; i < idx; ++i)
             if (pos[i] == -1 || pos[i] == pos[idx] || idx - i == abs(pos[idx] - pos[i]))
                 return false;
+        return true;
+    }
+};
+```
+
+<br/>
+
+**2. backtracking**
+
+```cpp
+class Solution {
+public:
+    vector<int> pos;
+    int n, res;
+    int totalNQueens(int n) 
+    {
+        pos.resize(n, -1);
+        this->n = n, this->res = 0;
+        backtrack(0);
+        return res;
+    }
+    
+    void backtrack(int idx)
+    {
+        if (idx >= n)
+        {
+            res += 1;
+            return;
+        }
+        for (int i = 0; i < n; ++i)
+        {
+            pos[idx] = i;
+            if (check(idx)) backtrack(idx + 1);
+        }
+    }
+    
+    bool check(int idx)
+    {
+        if (idx >= n) return true;
+        for (int i = 0; i < idx; ++i)
+            if (pos[i] == pos[idx] || abs(pos[i] - pos[idx]) == idx - i) return false;
         return true;
     }
 };
