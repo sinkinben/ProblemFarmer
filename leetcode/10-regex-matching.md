@@ -64,9 +64,9 @@ public:
 
 ## DFA
 
-Here I want to show how can solve this problem by **deterministic finite automaton (DFA)**.
+Here I want to show how to solve this problem by **deterministic finite automaton (DFA)**.
 
-Please note that you should know the conception of DFA before you read this article.
+Please note that you should know the concept of DFA before you read this article.
 
 For a pattern `p = "a.b*c"`, we can construct such a DFA:
 

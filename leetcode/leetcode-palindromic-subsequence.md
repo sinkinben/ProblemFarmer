@@ -6,6 +6,7 @@ Problems:
 
 - [516. Longest Palindromic Subsequence](https://leetcode-cn.com/problems/longest-palindromic-subsequence/)
 - [1682. Longest Palindromic Subsequence II](https://leetcode-cn.com/problems/longest-palindromic-subsequence-ii/)
+- [730. Count Different Palindromic Subsequences](https://leetcode-cn.com/problems/count-different-palindromic-subsequences/)
 
 
 
@@ -143,6 +144,8 @@ dp[i, j, ch] = 2 + dp[i + 1, j - 1, s[i]], if s[i] == s[j] && s[i] != ch
              = max(dp[i + 1, j, ch], dp[i, j - 1, ch]), otherwise
 ```
 
+And we should return `max(dp[0, n - 1])`.
+
 Here is the code.
 
 ```cpp
@@ -171,6 +174,112 @@ public:
             }
         }
         return *max_element(dp[0][n - 1].begin(), dp[0][n - 1].end());
+    }
+};
+```
+
+
+
+## Count Different Palindromic Subsequences
+
+Given a string s, return *the number of different non-empty palindromic subsequences in* `s`. Since the answer may be very large, return it **modulo** `109 + 7`.
+
+A subsequence of a string is obtained by deleting zero or more characters from the string.
+
+A sequence is palindromic if it is equal to the sequence reversed.
+
+Two sequences `a1, a2, ...` and `b1, b2, ...` are different if there is some `i` for which `ai != bi`. 
+
+**Example 1**
+
+```
+Input: s = "bccb"
+Output: 6
+Explanation: The 6 different non-empty palindromic subsequences are 'b', 'c', 'bb', 'cc', 'bcb', 'bccb'.
+Note that 'bcb' is counted only once, even though it occurs twice.
+```
+
+**Example 2**
+
+```
+Input: s = "abcdabcdabcdabcdabcdabcdabcdabcddcbadcbadcbadcbadcbadcbadcbadcba"
+Output: 104860361
+Explanation: There are 3104860382 different non-empty palindromic subsequences, which is 104860361 modulo 109 + 7.
+```
+
+**Constraints**
+
+- `1 <= s.length <= 1000`
+- `s[i]` is either `'a'`, `'b'`, `'c'`, or `'d'`.
+
+<br/>
+
+**Solution**
+
+Here we still use dynamic programming, which is a little similar to LPS-II problem above.
+
+Define `dp[i, j, ch]` as the number of non-empty palindomic sequence in the range of `s[i, ..., j]`, and its out-most letters are both `ch`.
+
+Then the state equation is:
+
+```cpp
+dp[i, j, ch] = dp[i + 1, j, ch], if s[i] != ch
+dp[i, j, ch] = dp[i, j - 1, ch], if s[j] != ch
+dp[i, j, ch] = dp[i + 1, j - 1, 'a'] + 
+               dp[i + 1, j - 1, 'b'] + 
+               dp[i + 1, j - 1, 'c'] + 
+               dp[i + 1, j - 1, 'd'] + 2, if s[i] = s[j] = ch
+```
+
+And we should return `SUM(dp[0, n - 1])`.
+
+Here is my code.
+
+```cpp
+typedef vector<int> vec_t;
+typedef vector<vec_t> vec2_t;
+typedef vector<vec2_t> vec3_t;
+class Solution 
+{
+public:
+    const string chars = "abcd";
+    const int NR_CHARS = 4;
+    const int MOD = 1e9 + 7;
+    int countPalindromicSubsequences(string s) 
+    {
+        int n = s.length();
+        vec3_t dp(n, vec2_t(n, vec_t(NR_CHARS, 0)));
+
+        for (int i = 0; i < n; ++i)
+            for (char ch : chars)
+                dp[i][i][ch - 'a'] = (s[i] == ch);
+
+        
+        for (int d = 1; d < n; ++d)
+        {
+            for (int i = 0; i + d < n; ++i)
+            {
+                int j = i + d;
+                for (char ch : chars)
+                {
+                    if (s[i] != ch) dp[i][j][ch - 'a'] = dp[i + 1][j][ch - 'a'];
+                    else if (s[j] != ch) dp[i][j][ch - 'a'] = dp[i][j - 1][ch - 'a'];
+                    else if (s[i] == ch && s[j] == ch)
+                    {
+                        dp[i][j][ch - 'a'] = 2;
+                        for (char c : chars)
+                        {
+                            dp[i][j][ch - 'a'] += dp[i + 1][j - 1][c - 'a'];
+                            dp[i][j][ch - 'a'] %= MOD;
+                        }
+                    }
+                }
+            }
+        }
+        
+        int res = 0;
+        for (int x : dp[0][n - 1]) res += x, res %= MOD;
+        return res;
     }
 };
 ```

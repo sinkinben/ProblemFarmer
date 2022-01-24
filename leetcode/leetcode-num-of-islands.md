@@ -6,6 +6,7 @@ Problems:
 - [305. Number of Islands II](https://leetcode-cn.com/problems/number-of-islands-ii/)
 - [694. Number of Distinct Islands](https://leetcode-cn.com/problems/number-of-distinct-islands/)
 - [711. Number of Distinct Islands II](https://leetcode-cn.com/problems/number-of-distinct-islands-ii/)
+- [695. Max Area of Island](https://leetcode-cn.com/problems/max-area-of-island/)
 
 
 
@@ -394,6 +395,97 @@ public:
         }
         sort(shapedPaths.begin(), shapedPaths.end());
         return shapedPaths[0];
+    }
+};
+```
+
+
+
+## Max Area of Island
+
+This problem is similar to "200 - Num of Islands", we can use DFS or disjoint set (union find) to solve it.
+
+<br/>
+
+**1. DFS**
+
+```cpp
+class Solution 
+{
+public:
+    int m, n;
+    int maxAreaOfIsland(vector<vector<int>>& grid) 
+    {
+        if (grid.size() == 0 || grid[0].size() == 0) return 0;
+        m = grid.size(), n = grid[0].size();
+        int res = 0;
+        for (int i = 0; i < m; ++i)
+            for (int j = 0; j < n; ++j)
+                res = max(res, dfs(grid, i, j));
+        return res;
+    }
+
+    int dfs(vector<vector<int>>& grid, int x, int y)
+    {
+        if (x < 0 || x >= m || y < 0 || y >= n || grid[x][y] <= 0) return 0;
+        grid[x][y] = -1;
+        return 1 + dfs(grid, x, y - 1) + dfs(grid, x, y + 1) + dfs(grid, x - 1, y) + dfs(grid, x + 1, y);
+    } 
+};
+```
+
+<br/>
+
+**2. Union Find**
+
++ Each cell `grid[i][j]` is a node, whose id is `i * n + j`.
++ Merge each `1`-cell with cells on its right and bottom (if they were `1`-cell, too).
++ Merge each `0`-cell to a special id `water`, which is larger than any island's id.
+
+Time complexity is `O(mn + mn * log(mn))`.
+
+```cpp
+class Solution
+{
+public:
+    vector<int> root, size;
+    int m, n;
+    
+    int find(int x) { return root[x] == -1 ? x : root[x] = find(root[x]); }
+    
+    void merge(int x, int y)
+    {
+        x = find(x), y = find(y);
+        if (x != y)
+        {
+            root[y] = x;
+            size[x] += size[y], size[y] = size[x];
+        }
+    }
+    
+    int getId(int x, int y) { return x * n + y; }
+    
+    int maxAreaOfIsland(vector<vector<int>> &grid)
+    {
+        if (grid.size() == 0 || grid[0].size() == 0) return 0;
+        m = grid.size(), n = grid[0].size();
+        root.resize(m * n, -1);
+        size.resize(m * n, 1);
+        int res = 0;
+        for (int i = 0; i < m; ++i)
+        {
+            for (int j = 0; j < n; ++j)
+            {
+                if (grid[i][j] == 1)
+                {
+                    int id = getId(i, j);
+                    if (i + 1 < m && grid[i + 1][j]) merge(id, getId(i + 1, j));
+                    if (j + 1 < n && grid[i][j + 1]) merge(id, getId(i, j + 1));
+                    res = max(res, size[find(id)]);
+                }
+            }
+        }
+        return res;
     }
 };
 ```
