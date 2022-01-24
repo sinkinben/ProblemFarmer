@@ -97,7 +97,7 @@ public:
 
 <br/>
 
-**Follow Up**
+**Follow Up 1**
 
 If the operators set includes `'-'`, the we can push string `"-x"` (as it was a leaf node) into the vector, since `a - b = a + (-b)`.
 
@@ -168,4 +168,27 @@ public:
     }
 };
 ```
+
+<br/>
+
+**Follow Up 2**
+
+If there are 4 operators `+, -, *, /` in the expression tree, how can we solve this problem?
+
+- Firstly, we check the variables set of these two expression (their names and number of occurrences, which can denoted by `map<string, int>`), i.e. check the leaf-nodes set. If these two variables set are not equal, return false.
+  - This step cost $O(m_1 + m_2)$ time, where $m1, m2$ are the numbers of nodes of two expression trees, respectively.
+- Assign a **random non-zero value** to each variable, then judge whether if values of these two expressions are equal.
+  - Repeat this step for 1000 times (maybe less or more). 
+  - If there exists a test that output "not equal", then return false. Otherwise, return true.
+  - We can use in-order traversal to compute the value of expression tree, hence this step will cost $O(m_1 + m_2)$ time.
+- Note that the **divisors in expressions must be non-zero.**
+
+Why this dummy random-algorithm work?
+
+- Since there are 4 operators in the expressions, the probability of mis-judgement $p$ is low, where $0 < p < 1$.
+  - The mis-judgement events means that, for the given expressions `E1` and `E2`, they are not equal actually, but our algorithm return `true`.
+  - If our algorithm return `false`, then it must be correct absolutely. The mis-judgements only happen when returning `true`.
+- We assign random non-zero value, and this can lower the probability of mis-judge. 
+  - For example, if given `E1 = a * (very complicated expr1)` and `E2 = a * (very complicated expr2)`, if we assign `a = b = 0` unfortunately, then the mis-judgement will happen.
+- Suppose the probability of mis-judgement is $p = 0.9$ for each test (and 0.9 is an impossible value) . **Only if total 1000 tests were mis-judged**, our algorithm will mis-judge. Hence probability of mis-judgement of our algorithm is ${0.9} ^ {1000} \approx  10 ^ {-46}$.
 
