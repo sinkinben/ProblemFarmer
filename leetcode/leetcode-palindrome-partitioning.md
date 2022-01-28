@@ -11,6 +11,21 @@ Problems:
 
 ## Palindrome Partitioning
 
+Given a string `s`, partition `s` such that every substring of the partition is a **palindrome**. Return all possible palindrome partitioning of `s`.
+
+A **palindrome** string is a string that reads the same backward as forward.
+
+**Example**
+
+```
+Input: s = "aab"
+Output: [["a","a","b"],["aa","b"]]
+```
+
+<br/>
+
+**Solution**
+
 Backtracking strategy.
 
 If you want know more about backtracking, welcome to read my article "[A Pattern to Solve Backtracking Problems](https://github.com/sinkinben/leetcode/blob/master/solution-note/leetcode/leetcode-backtrack.md)".
@@ -59,7 +74,115 @@ public:
 
 
 
+## Palindrome Partitioning II
+
+Given a string `s`, partition `s` such that every substring of the partition is a palindrome.
+
+Return *the minimum cuts needed* for a palindrome partitioning of `s`.
+
+**Example 1:**
+
+```
+Input: s = "aab"
+Output: 1
+Explanation: The palindrome partitioning ["aa","b"] could be produced using 1 cut.
+```
+
+**Example 2:**
+
+```
+Input: s = "a"
+Output: 0
+```
+
+**Example 3:**
+
+```
+Input: s = "ab"
+Output: 1
+```
+
+**Constraints:**
+
+- `1 <= s.length <= 2000`
+- `s` consists of lowercase English letters only.
+
+<br/>
+
+**Solution**
+
+```
+TBD.
+```
+
+
+
+## Palindrome Partitioning III
+
+You are given a string `s` containing lowercase letters and an integer `k`. You need to :
+
+- First, change some characters of `s` to other lowercase English letters.
+- Then divide `s` into `k` non-empty disjoint substrings such that each substring is a palindrome.
+
+Return *the minimal number of characters that you need to change to divide the string*.
+
+**Example 1:**
+
+```
+Input: s = "abc", k = 2
+Output: 1
+Explanation: You can split the string into "ab" and "c", and change 1 character in "ab" to make it palindrome.
+```
+
+**Example 2:**
+
+```
+Input: s = "aabbc", k = 3
+Output: 0
+Explanation: You can split the string into "aa", "bb" and "c", all of them are palindrome.
+```
+
+**Example 3:**
+
+```
+Input: s = "leetcode", k = 8
+Output: 0
+```
+
+**Constraints:**
+
+- `1 <= k <= s.length <= 100`.
+- `s` only contains lowercase English letters.
+
+<br/>
+
+**Solution**
+
+```
+TBD.
+```
+
+
+
 ## Palindrome Partitioning IV
+
+Given a string `s`, return `true` *if it is possible to split the string* `s` *into three **non-empty** palindromic substrings. Otherwise, return* `false`.
+
+A string is said to be palindrome if it the same string when reversed.
+
+Constraints: `s.length <= 2000`.
+
+**Example**
+
+```
+Input: s = "abcbdd"
+Output: true
+Explanation: "abcbdd" = "a" + "bcb" + "dd", and all three substrings are palindromes.
+```
+
+<br/>
+
+**Solution**
 
 Dynamic programming problem.
 
