@@ -13,6 +13,8 @@ Two Sum:
 
 - [15. 3Sum](https://leetcode.com/problems/3sum)
 - [16. 3Sum Closest](https://leetcode.com/problems/3sum-closest)
+- [259. 3Sum Smaller](https://leetcode.com/problems/3sum-smaller)
+- [923. 3Sum With Multiplicity](https://leetcode.com/problems/3sum-with-multiplicity)
 
 4 Sum Problems:
 
@@ -287,7 +289,7 @@ public:
 
 
 
-## 3 Sum
+## 3Sum
 
 Given an integer array nums, return all the triplets `[nums[i], nums[j], nums[k]]` such that `i != j`, `i != k`, and `j != k`, and `nums[i] + nums[j] + nums[k] == 0`.
 
@@ -381,6 +383,214 @@ Given an integer array `nums` of length `n` and an integer `target`, find three 
 Return *the sum of the three integers*.
 
 You may assume that each input would have exactly one solution.
+
+**Solution**
+
+- We reduce this problem into "Two Sum Closest".
+- Define `twoSumClosest(nums, start, target)` as the closest value to `target`, in the range of `[start, n)`. And the closest value consist of two different elements.
+- For each element `nums[i]` in the array, find closest value to `target - nums[i]`, i.e. calling `val = twoSumClosest(nums, i + 1, target - nums[i])`.
+- Then, `val + nums[i]` is a candidate, compare it with current result `res`, find the closest one.
+
+```cpp
+class Solution
+{
+public:
+    const int INF = 0x3f3f3f3f;
+    int threeSumClosest(vector<int> &nums, int target)
+    {
+        sort(nums.begin(), nums.end());
+        int res = INF, n = nums.size(), val;
+        for (int i = 0; i < n; ++i)
+        {
+            val = twoSumClosest(nums, i + 1, target - nums[i]);
+            res = select(res, val + nums[i], target);
+        }
+        return res;
+    }
+
+    int twoSumClosest(vector<int> &nums, int start, int target)
+    {
+        int n = nums.size();
+        int l = start, r = n - 1;
+        int res = INF;
+        while (l < r)
+        {
+            int val = nums[l] + nums[r];
+            res = select(res, val, target);
+            if (val < target) ++l;
+            else --r;
+        }
+        return res;
+    }
+
+    /* select the closest value to target */
+    int select(int val1, int val2, int target)
+    {
+        return abs(val1 - target) < abs(val2 - target) ? val1 : val2;
+    }
+};
+```
+
+
+
+## 3Sum Smaller
+
+Given an array of `n` integers `nums` and an integer `target`, find the number of index triplets `i, j, k` with `0 <= i < j < k < n` that satisfy the condition `nums[i] + nums[j] + nums[k] < target`.
+
+**Constraints:**
+
+- `n == nums.length`
+- `0 <= n <= 3500`
+- `-100 <= nums[i] <= 100`
+- `-100 <= target <= 100`
+
+**Example**
+
+```text
+Input: nums = [-2,0,1,3], target = 2
+Output: 2
+Explanation: Because there are two triplets which sums are less than 2:
+[-2,0,1]
+[-2,0,3]
+```
+
+<br/>
+
+**Solution**
+
+- It is similar to "3Sum Closest" above.
+- Define `twoSumSmaller(nums, start, target)` as the number of pairs `(i, j)` that satisfy `nums[i] + nums[j] < target`.
+- For each element `nums[i]` in array, call `twoSumSmaller(nums, i + 1, target - nums[i])`, and add the returned value into result `res`.
+
+Please note that, in the if-branch of `twoSumSmaller`, `val < target` means that, all the pairs `(l, l+1), (l, l+2), ..., (l, r)` will satisfy the condition above. Hence we let `res += r - l`.
+
+```cpp
+class Solution
+{
+public:
+    int threeSumSmaller(vector<int>& nums, int target)
+    {
+        sort(nums.begin(), nums.end());
+        int n = nums.size(), res = 0;
+        for (int i = 0; i < n; ++i)
+            res += twoSumSmaller(nums, i + 1, target - nums[i]);
+        return res;
+    }
+
+    int twoSumSmaller(vector<int>& nums, int start, int target)
+    {
+        int n = nums.size(), res = 0;
+        int l = start, r = n - 1;
+        while (l < r)
+        {
+            int val = nums[l] + nums[r];
+            if (val < target) res += r - l, l++;
+            else r--;
+        }
+        return res;
+    }
+};
+```
+
+
+
+## 3Sum With Multiplicity - TBD
+
+Given an integer array `arr`, and an integer `target`, return the number of tuples `i, j, k` such that `i < j < k` and `arr[i] + arr[j] + arr[k] == target`.
+
+As the answer can be very large, return it **modulo** `10^9 + 7`.
+
+**Example 1:**
+
+```text
+Input: arr = [1,1,2,2,3,3,4,4,5,5], target = 8
+Output: 20
+Explanation:
+Enumerating by the values (arr[i], arr[j], arr[k]):
+(1, 2, 5) occurs 8 times;
+(1, 3, 4) occurs 8 times;
+(2, 2, 4) occurs 2 times;
+(2, 3, 3) occurs 2 times.
+```
+
+**Example 2:**
+
+```text
+Input: arr = [1,1,2,2,2,2], target = 5
+Output: 12
+Explanation:
+arr[i] = 1, arr[j] = arr[k] = 2 occurs 12 times:
+We choose one 1 from [1,1] in 2 ways, and two 2s from [2,2,2,2] in 6 ways.
+```
+
+**Constraints:**
+
+- `3 <= arr.length <= 3000`
+- `0 <= arr[i] <= 100`
+- `0 <= target <= 300`
+
+<br/>
+
+**Solution**
+
+Here we should contain the duplicate tuples (but their indices are distinct).
+
+```text
+TBD.
+```
+
+
+
+## 4Sum
+
+Given an array `nums` of `n` integers, return *an array of all the **unique** quadruplets* `[nums[a], nums[b], nums[c], nums[d]]` such that:
+
+- `0 <= a, b, c, d < n`
+- `a`, `b`, `c`, and `d` are **distinct**.
+- `nums[a] + nums[b] + nums[c] + nums[d] == target`
+
+You may return the answer in **any order**.
+
+<br/>
+
+**Solution**
+
+```cpp
+class Solution
+{
+public:
+    vector<vector<int>> res;
+    vector<vector<int>> fourSum(vector<int>& nums, int target)
+    {
+        sort(nums.begin(), nums.end());
+        int n = nums.size();
+        for (int i = 0; i < n; ++i)
+            for (int j = i + 1; j + 2 < n; ++j)
+                twoSum(nums, j + 1, n - 1, target - nums[i] - nums[j], i, j);
+
+        set<vector<int>> uniq(res.begin(), res.end());
+        res.clear();
+        for (auto &x : uniq) res.emplace_back(x);
+        return res;
+    }
+
+    void twoSum(vector<int> &nums, int l, int r, int target, int first, int second)
+    {
+        if (l >= r || first == second) return;
+        while (l < r)
+        {
+            int val = nums[l] + nums[r];
+            if (val < target) l++;
+            else if (val > target) r--;
+            else
+            {
+                res.emplace_back(vector{nums[first], nums[second], nums[l], nums[r]});
+                l++, r--;
+            }
+        }
+    }
+};
+```
 
 
 
