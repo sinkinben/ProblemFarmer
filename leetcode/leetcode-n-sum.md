@@ -18,6 +18,7 @@ Two Sum:
 
 4 Sum Problems:
 
+- [18. 4Sum](https://leetcode.com/problems/4sum)
 - [454. 4Sum II](https://leetcode.com/problems/4sum-ii/)
 
 
@@ -494,7 +495,7 @@ public:
 
 
 
-## 3Sum With Multiplicity - TBD
+## 3Sum With Multiplicity
 
 Given an integer array `arr`, and an integer `target`, return the number of tuples `i, j, k` such that `i < j < k` and `arr[i] + arr[j] + arr[k] == target`.
 
@@ -535,8 +536,57 @@ We choose one 1 from [1,1] in 2 ways, and two 2s from [2,2,2,2] in 6 ways.
 
 Here we should contain the duplicate tuples (but their indices are distinct).
 
+- Suppose that we count the occurrences of each number, and stored them by a hash table `cnt`.
+- Now, we need to select **three numbers (they could be a same number)**, to consist of `target`.
+  - If these there numbers are same, suppose `k1 = k2 = k3 = target / 3`, then we can get $C_{n}^{3}$ such pairs, i.e. `cnt[k] * (cnt[k] - 1) * (cnt[k] - 2) / 6`.
+  - If two of them are same, and the remained one is not, suppose `k1 = k2, k3 = target - k1 - k2`, then we can get `cnt[k1] * (cnt[k1] - 1) / 2 * cnt[k3]` such pairs.
+  - If they are totally distinct, then we can get `cnt[k1] * cnt[k2] * cnt[k3]`.
+
+Here is my code. Refer to [this article](https://leetcode.com/problems/3sum-with-multiplicity/discuss/181131/C%2B%2BJavaPython-O(N-%2B-101-*-101)).
+
+See the `if`-branches as follows, a key problem is why "there numbers are distinct" could be denoted by `k1 < k2 && k2 < k3`?
+
+Let me explain this by showing an example. Suppose the input is `arr = [1, 2, 3]` and `target` is 6. Then the double-loops will produce `(k1, k2, k3)` pairs as follows:
+
 ```text
-TBD.
+ k1 k2 k3
+ 1  2  3
+ 1  3  2
+ 2  1  3
+ 2  3  1
+ 3  1  2
+ 3  2  1
+```
+
+For this input, the expected answer is `1`. Hence we need to choose **one** from above pairs, which occurs exactly **only once**. Therefore,    "there numbers are distinct" could be `k1 < k2 && k2 < k3` (or `k1 > k2 && k2 > k3`).
+
+```cpp
+class Solution
+{
+public:
+    const int MOD = 1e9 + 7;
+    int threeSumMulti(vector<int>& arr, int target)
+    {
+        unordered_map<int, uint64_t> cnt;
+        for (int x : arr) cnt[x]++;
+        uint64_t res = 0;
+        for (auto [k1, v1] : cnt)
+        {
+            for (auto [k2, v2] : cnt)
+            {
+                int k3 = target - k1 - k2;
+                if (!cnt.count(k3)) continue;
+                if (k1 == k2 && k2 == k3 && v1 >= 3)
+                    res += (v1 * (v1 - 1) * (v1 - 2)) / 6;
+                else if (k1 == k2 && k2 != k3 && v1 >= 2)
+                    res += (v1 * (v1 - 1)) / 2 * cnt[k3];
+                else if (k1 < k2 && k2 < k3)
+                    res += v1 * v2 * cnt[k3];
+            }
+        }
+        return res % MOD;
+    }
+};
 ```
 
 
