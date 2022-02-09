@@ -57,8 +57,6 @@ public:
     pair<uint32_t, uint32_t> value;
 
     Rational(const string &str) {
-        isNegative = false;
-        value = {0, 0};
         setValue(str);
     }
 
@@ -145,6 +143,185 @@ int main() {
 
 
 
-**References**
+## File Iterator
+
+A file contains a sequence of integers, stored one per line. Implement a class that facilitates iteration over these integers.
+
+A valid integer is a sequence of one or more digits (without leading-zeros), optionally preceded by a plus or minus sign, representing a number within the range `[-1e9, 1e9]`. We allow spaces to appear in a line before and/or after a valid integers. Lines are separated with the line-feed character (ASCII code 10).
+
+There might be lines that do not represent valid integers, e.g. `2u1, 23.9, #12, 00, ++1, 20`
+
+. Such lines are considered to comments, and should be discarded.
+
+Define a class `Solution` with an input iterator (as defined by C++03 and 11) that iterates over integers from an input stream compliant with the above format.
+
+You should implement the following interfaces:
+
+```cpp
+#include <iosfwd>
+class Solution {
+public:
+    Solution(istream &s);
+    class iterator;
+    iterator begin();
+    iterator end();
+};
+/**
+ * Example usage:
+ *     Solution sol(stream);
+ *     for (Solution::iterator it = sol.begin(); it != sol.end(); ++it) {
+ *         int x = *it;
+ *         cout << x << endl;
+ *     }
+ */
+```
+
+<br/>
+
+**Solution**
+
+The first problem we need to solve is to construct an `istream` object from a file `nums.txt`.
+
+```cpp
+int main()
+{
+    filebuf file;
+
+    if (file.open("./nums.txt", ios::in) == nullptr) {
+        cout << "Open file failed.\n";
+        exit(EXIT_FAILURE);
+    }
+
+    istream input(&file);
+    string buf;
+    while (getline(input, buf))
+        cout << buf << endl;
+}
+```
+
+Here is my code.
+
+```cpp
+#include <fstream>
+#include <iosfwd>
+#include <iostream>
+#include <regex>
+using namespace std;
+
+class Solution {
+public:
+    class iterator {
+    public:
+        iterator(istream &stream, bool end = false) : input(stream) {
+            memset(value, 0, sizeof(value));
+        }
+
+        iterator(const iterator &it) : input(it.input) {
+            memcpy(value, it.value, sizeof(value));
+        }
+
+        /* (*itor) */
+        int operator*() const {
+            string str(value);
+            return stoi(str);
+        }
+
+        /* (++itor) */
+        iterator &operator++() {
+            do {
+                if (input.eof())
+                    break;
+                input.getline(value, sizeof(value));
+            } while (!validNumber(value));
+            return *this;
+        }
+
+        bool validNumber(char *str) {
+            static regex pattern("(\\s*)([+-]?)([1-9]\\d*|0)(\\s*)");
+            static const char *MAXVAL = "1000000000";
+
+            if (!regex_match(str, pattern))
+                return false;
+
+            /* remove leading spaces */
+            while (*str == ' ')
+                ++str;
+            str += (str[0] == '+') || (str[0] == '-');
+
+            /* remove trailing spaces */
+            int n = strlen(str);
+            while (str[n - 1] == ' ')
+                --n;
+            str[n] = '\0';
+
+            return (n < 10) || (n == 10 && strcmp(str, MAXVAL) == 0);
+        }
+
+        /* dummy end iterator */
+        bool operator!=(const iterator &itor) const { return !input.eof(); }
+
+    protected:
+        istream &input;
+        char value[256];
+    };
+
+public:
+    Solution(istream &stream) : input(stream) {}
+
+    iterator begin() {
+        iterator it(input);
+        ++it;
+        return it;
+    }
+
+    iterator end() { return iterator(input); }
+
+protected:
+    istream &input;
+};
+
+int main() {
+    filebuf file;
+
+    if (file.open("./nums.txt", ios::in) == nullptr) {
+        cout << "Open file failed.\n";
+        exit(EXIT_FAILURE);
+    }
+
+    istream input(&file);
+
+    Solution sol(input);
+
+    for (auto it = sol.begin(); it != sol.end(); ++it) {
+        cout << *it << endl;
+    }
+}
+```
+
+Here is my test `nums.txt`. Please note that there must be an empty line at the end of file.
+
+```text
+1  
+  +11111  
+  -101000  
+  12312   
+2131.11  
+    1000000000  
+    999999999
+  1000000001   
+      2000000000
+  +0   
+   -0    
+    0111  
+    #1123411
+    ++1
+ abc
+289
+
+```
+
+
+
+## References
 
 - [1] http://arzhon.blog.binusian.org/oop-rational-class-in-cpp/
