@@ -149,3 +149,147 @@ public:
 };
 ```
 
+
+
+## Follow Up
+
+There is another problem [44. Wildcard Matching](https://leetcode.com/problems/wildcard-matching/), which is similar to the regex-matching problem here.
+
+**Description**
+
+Given an input string (`s`) and a pattern (`p`), implement wildcard pattern matching with support for `'?'` and `'*'` where:
+
+- `'?'` Matches any single character.
+- `'*'` Matches any sequence of characters (including the empty sequence).
+
+The matching should cover the **entire** input string (not partial).
+
+<br/>
+
+**NFA Solution (TLE)**
+
+It work, but slow.
+
+```cpp
+class Solution
+{
+public:
+    unordered_map<int, unordered_map<char, int>> automaton;
+    int state = 1;
+    
+    bool isletter(char x) { return 'a' <= x && x <= 'z'; }
+    
+    bool isMatch(string s, string p)
+    {
+        /* We need the '*' occur at index > 0 */
+        s = "a" + s;
+        p = "a" + p;
+        for (char x : p)
+        {
+            if (isletter(x) || x == '?')
+                automaton[state][x] = state + 1, ++state;
+            else if (x == '*')
+                automaton[state]['*'] = state;
+        }
+        return match(s, 0, 1);
+    }
+    
+    bool match(string &s, int idx, int cur)
+    {
+        int n = s.length();
+        
+        if (cur == 0) return false;
+        if (idx >= n && cur == state) return true;
+        
+        if (idx < n)
+        {
+            int s1 = automaton[cur][s[idx]];
+            int s2 = automaton[cur]['*'];
+            int s3 = automaton[cur]['?'];
+            return match(s, idx + 1, s1) || match(s, idx + 1, s2) || match(s, idx + 1, s3);
+        }
+        return false;
+    }
+};
+```
+
+<br/>
+
+**Iteration Solution (AC)**
+
+See this [solution](https://leetcode.com/problems/wildcard-matching/discuss/17810/Linear-runtime-and-constant-space-solution).
+
+```cpp
+class Solution {
+public:
+    bool isMatch(string s, string p) {
+        const char *sp = s.c_str(), *pp = p.c_str();
+        const char *star = nullptr, *ss = sp;
+        
+        while (*sp) {
+            /* We should match letters and '?' in the pattern firstly */
+            if (*sp == *pp || *pp == '?') { sp++, pp++; continue; }
+            
+            /* if we meet a star '*', then record its index,
+             * and record the index of `s`
+             */
+            if (*pp == '*') { star = pp++, ss = sp; continue; }
+            
+            /* skip one element of `s`, since we have a '*' in pattern */
+            if (star) { pp = star + 1, sp = ++ss; continue; }
+            
+            /* otherwise, return false */
+            return false;
+        }
+        /* `s` have been matched totally, but there are still stars '*'
+         * at the tail of `p`, e.g. s = "" and p = "*****"
+         */
+        while (*pp == '*') ++pp;
+
+        return *sp == '\0' && *pp == '\0';
+    }
+};
+```
+
+<br/>
+
+**DP - Solution**
+
+Let `dp[i, j]` denote whether if  `s[0, ..., i]` matches `p[0, ..., j]`. Then the state equations will be:
+
+```text
+dp[i, j] = d[i-1, j-1] && (isletter(s[i]) && s[i] == p[j] || p[j] == '?')
+dp[i, j] = dp[i, j-1] || dp[i-1, j] if p[j] == '*'
+```
+
+For the 2nd equation, 
+
+- `dp[i, j-1]` denote that the star `p[j] = '*'`, has been matched with `s[i]`.
+- `dp[i-1, j]` denote that the star `p[j] = '*'`, will be skipped, matching nothing.
+
+```cpp
+class Solution {
+public:
+    bool isletter(char x) { return 'a' <= x && x <= 'z'; }
+    bool isMatch(string s, string p) {
+        int slen = s.length();
+        int plen = p.length();
+        vector<vector<uint8_t>> dp(slen + 1, vector<uint8_t>(plen + 1, 0));
+        
+        dp[0][0] = 1;
+        for (int j = 1; j <= plen && p[j - 1] == '*'; ++j)
+            dp[0][j] = 1;
+
+        for (int i = 1; i <= slen; ++i) {
+            for (int j = 1; j <= plen; ++j) {
+                if (isletter(s[i - 1]) && s[i - 1] == p[j - 1] || p[j - 1] == '?')
+                    dp[i][j] = dp[i - 1][j - 1];
+                else if (p[j - 1] == '*')
+                    dp[i][j] = dp[i - 1][j] | dp[i][j - 1];
+            }
+        }
+        return dp[slen][plen];
+    }
+};
+```
+
