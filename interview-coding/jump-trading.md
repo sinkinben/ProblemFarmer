@@ -1,4 +1,4 @@
-## Interview Coding
+## Jump Trading 
 
 Refer to:
 
@@ -149,9 +149,7 @@ A file contains a sequence of integers, stored one per line. Implement a class t
 
 A valid integer is a sequence of one or more digits (without leading-zeros), optionally preceded by a plus or minus sign, representing a number within the range `[-1e9, 1e9]`. We allow spaces to appear in a line before and/or after a valid integers. Lines are separated with the line-feed character (ASCII code 10).
 
-There might be lines that do not represent valid integers, e.g. `2u1, 23.9, #12, 00, ++1, 20`
-
-. Such lines are considered to comments, and should be discarded.
+There might be lines that do not represent valid integers, e.g. `2u1, 23.9, #12, 00, ++1, 20`. Such lines are considered to comments, and should be discarded.
 
 Define a class `Solution` with an input iterator (as defined by C++03 and 11) that iterates over integers from an input stream compliant with the above format.
 
@@ -317,6 +315,120 @@ Here is my test `nums.txt`. Please note that there must be an empty line at the 
     ++1
  abc
 289
+
+```
+
+
+
+## Decimal
+
+**Description**
+
+Implement a decimal class, which supports parsing from string (e.g 2.33) to decimal, and then realize the addition of two decimals.
+
+<br/>
+
+**Solution**
+
+```cpp
+#include <cmath>
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Decimal {
+  protected:
+    uint64_t value;
+    /* there are at most 10 numbers after '.' */
+    const int precision = 10;
+
+  public:
+    Decimal(const string &str) { setValue(str); }
+
+    void setValue(const string &str) {
+        value = 0;
+        int n = str.length();
+        int point = n;
+        for (int i = 0; i < n; ++i) {
+            if ('0' <= str[i] && str[i] <= '9')
+                value = value * 10 + (str[i] - '0');
+            else if (str[i] == '.')
+                point = i;
+        }
+        for (int i = n - point; i <= precision; ++i)
+            value = value * 10;
+    }
+
+    Decimal &operator+=(const Decimal &decimal) {
+        value += decimal.value;
+        return *this;
+    }
+
+    bool operator==(const Decimal &decimal) const {
+        return value == decimal.value;
+    }
+
+    void display() {
+        string str = to_string(value);
+        int pos = str.length() - precision;
+        str.insert(pos, 1, '.');
+        cout << str << "\n";
+    }
+};
+
+int main() {
+    Decimal d("1.11111");
+    d += Decimal("2.9999999");
+    d.display();
+}
+```
+
+
+
+## Divide
+
+Given `string a` and integer `int b`, output `a / b` and `a % b`.
+
+```cpp
+#include <algorithm>
+#include <iostream>
+#include <vector>
+
+using namespace std;
+// A除b  r为余数
+vector<int> div(vector<int> &A, int b, int &r) {
+    vector<int> C;
+    r = 0;
+    for (int i = 0; i < A.size(); ++i) {
+        r = r * 10 + A[i];
+        C.push_back(r / b);
+        r = r % b;
+    }
+    // 存储顺序逆转
+    reverse(C.begin(), C.end());
+    // 处理前导0
+    while (C.size() > 1 && C.back() == 0)
+        C.pop_back();
+    reverse(C.begin(), C.end());
+    return C;
+}
+
+int main() {
+    string a = "12345";
+    int b = 11;
+
+    vector<int> A;
+    for (char x : a)
+        A.emplace_back(x - '0');
+
+    int r; //存储余数
+    vector<int> C = div(A, b, r);
+    for (int x : C)
+        cout << x;
+    cout << endl << r << endl;
+
+    return 0;
+}
 
 ```
 
