@@ -57,7 +57,7 @@ Output: 1
 
 **Solution**
 
-Use **pre-order** to solve this problem.
+Use **post-order** to solve this problem.
 
 ```cpp
 class Solution 
