@@ -70,7 +70,7 @@ Please note that you should know the concept of DFA before you read this article
 
 For a pattern `p = "a.b*c"`, we can construct such a DFA:
 
-<img src="https://gitee.com/sinkinben/pic-go/raw/master/img/20220121134600.png" style="background: #fff"/>
+<img src="https://github.com/Sin-Kinben/PicGo/raw/master/img/20220121134600.png" style="background: #fff"/>
 
 The `'$'` sign means that, we do not need any character to reach next state, since `'*'` matches **zero** or more of the preceding element. 
 

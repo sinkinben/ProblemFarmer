@@ -147,7 +147,7 @@ public:
 
 解析 2 ：[偏数学的推导](https://leetcode-cn.com/problems/chou-shu-lcof/solution/mian-shi-ti-49-chou-shu-dong-tai-gui-hua-qing-xi-t/)。推荐看该文章里面的动画解析。
 
-<img src="https://gitee.com/sinkinben/pic-go/raw/master/img/20201023192000.png" style="width:50%;" />
+<img src="https://github.com/Sin-Kinben/PicGo/raw/master/img/20201023192000.png" style="width:50%;" />
 
 丑数序列由 3 个子序列组成，即 $2a, 3b, 5c$ 组成，其中 $a,b,c = 1,\dots,n$ 。
 

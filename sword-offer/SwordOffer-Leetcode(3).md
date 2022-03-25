@@ -16,7 +16,7 @@
 
 一图胜千言。
 
-<img src="https://gitee.com/sinkinben/pic-go/raw/master/img/20201017160500.png" style="width:80%;" />
+<img src="https://github.com/Sin-Kinben/PicGo/raw/master/img/20201017160500.png" style="width:80%;" />
 
 ```cpp
 class MinStack {
@@ -55,11 +55,11 @@ public:
 
 + 例子 1
 
-<img src="https://gitee.com/sinkinben/pic-go/raw/master/img/20201017170244.png" style="width:80%;" />
+<img src="https://github.com/Sin-Kinben/PicGo/raw/master/img/20201017170244.png" style="width:80%;" />
 
 + 例子 2
 
-<img src="https://gitee.com/sinkinben/pic-go/raw/master/img/20201017170346.png" style="width:80%;" />
+<img src="https://github.com/Sin-Kinben/PicGo/raw/master/img/20201017170346.png" style="width:80%;" />
 
 ```cpp
 class Solution {
@@ -506,21 +506,21 @@ OS：虽然空间是优化了，但是真正机考做题肯定是「哈希解法
 
 第一步，把复制的 $x'$ 插入到原节点 $x$ 的后面。
 
-<img src="https://gitee.com/sinkinben/pic-go/raw/master/img/20201017204828.png" style="width:80%;" />
+<img src="https://github.com/Sin-Kinben/PicGo/raw/master/img/20201017204828.png" style="width:80%;" />
 
 第二步，把 $x'$ 的 `random` 指针指向 `x->random->next` .
 
-<img src="https://gitee.com/sinkinben/pic-go/raw/master/img/20201017204928.png" style="width:80%;" />
+<img src="https://github.com/Sin-Kinben/PicGo/raw/master/img/20201017204928.png" style="width:80%;" />
 
 第三步，根据奇偶性分离出 2 个链表。
 
-<img src="https://gitee.com/sinkinben/pic-go/raw/master/img/20201017205129.png" style="width:80%;" />
+<img src="https://github.com/Sin-Kinben/PicGo/raw/master/img/20201017205129.png" style="width:80%;" />
 
 ### DFS 和 BFS
 
 将这个复杂链表看作是一个有向图，如下图所示（源自 leetcode [讨论区](https://leetcode-cn.com/problems/fu-za-lian-biao-de-fu-zhi-lcof/solution/lian-biao-de-shen-kao-bei-by-z1m/)）。
 
-<img src="https://gitee.com/sinkinben/pic-go/raw/master/img/20201029210110.png" style="width:67%;" />
+<img src="https://github.com/Sin-Kinben/PicGo/raw/master/img/20201029210110.png" style="width:67%;" />
 
 **DFS 代码**
 

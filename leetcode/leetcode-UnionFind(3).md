@@ -91,7 +91,7 @@ public:
 
   即给出的示例 2 。这种情况下，必然存在一个边 `e` 使得图中存在一个有向环，该边 `e` 即为所求。扫描 `edges` 的每一个边，同时建立并查集结构，如果某一边使得 `find(x) == y`，说明有环，返回该边即可。
 
-<img src="https://gitee.com/sinkinben/pic-go/raw/master/img/20210113200717.png" alt="image-20210113200717570" style="width:80%;" />
+<img src="https://github.com/Sin-Kinben/PicGo/raw/master/img/20210113200717.png" alt="image-20210113200717570" style="width:80%;" />
 
 **代码实现**
 

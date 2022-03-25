@@ -87,7 +87,7 @@ dp[i,j] = matrix[i, j]                                   if i==0 or j==0
 
 值得关注的是为什么要取**最小值**？
 
-<img src="https://gitee.com/sinkinben/pic-go/raw/master/img/20210117160221.png" width="80%"/>
+<img src="https://github.com/Sin-Kinben/PicGo/raw/master/img/20210117160221.png" width="80%"/>
 
 如上图所示，在位置 `(3, 4)` 上，相邻的三个 DP 值为：3, 1, 3 . 我们可以理解为以该位置为起点，在其左上方一圈一圈地扩大正方形的范围（直至边界遇到 0 值），最终所能扩充到的**边界必然受限于 3 个邻居中最小的一个**。
 
@@ -142,7 +142,7 @@ public:
 
 那么本题的答案就是所有 DP 值之和 `sum(dp)` 。
 
-<img src="https://gitee.com/sinkinben/pic-go/raw/master/img/20210117160244.png" width="300px"/>
+<img src="https://github.com/Sin-Kinben/PicGo/raw/master/img/20210117160244.png" width="300px"/>
 
 
 

@@ -54,7 +54,7 @@ int main()
 
 由题意可得以下有限自动机：
 
-<img src="https://gitee.com/sinkinben/pic-go/raw/master/img/20210130193648.png" style="width:40%;" />
+<img src="https://github.com/Sin-Kinben/PicGo/raw/master/img/20210130193648.png" style="width:40%;" />
 
 每个状态的转移条件为：当前字符与上一个字符是否相等。
 

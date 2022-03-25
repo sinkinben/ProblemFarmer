@@ -21,7 +21,7 @@
 
 解析如下图所示（图源自上述题解👆）。
 
-<img src="https://gitee.com/sinkinben/pic-go/raw/master/img/20201102205139.png" style="width:60%;" />
+<img src="https://github.com/Sin-Kinben/PicGo/raw/master/img/20201102205139.png" style="width:60%;" />
 
 注意到，当 `s[i-1] = 0` 时，与 `s[i]` 组成的两位数是无法翻译的，比如 `00, 01, 02, ..., 09` ，因此有转移方程：
 $$
@@ -181,7 +181,7 @@ public:
 
 数组元素展开为比特串，将一维数组看作看作是一个 `n x 32` 的矩阵。那么，每一列的 1 比特的数目之和，对 3 模运算后（结果必定是 0 或 1 ，不可能是 2 ），剩下的 1 就必定来自于出现一次的数字。
 
-<img src="https://gitee.com/sinkinben/pic-go/raw/master/img/20201102210312.png" style="width:60%;" />
+<img src="https://github.com/Sin-Kinben/PicGo/raw/master/img/20201102210312.png" style="width:60%;" />
 
 ```cpp
 class Solution {

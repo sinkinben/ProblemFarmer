@@ -122,7 +122,7 @@ public:
 
 以下图为例：
 
-<img src="https://gitee.com/sinkinben/pic-go/raw/master/img/20201105190630.png"/>
+<img src="https://github.com/Sin-Kinben/PicGo/raw/master/img/20201105190630.png"/>
 
 当输入 `p=7, q=4` 时，后序遍历到 7 或 4 时，返回 `left = 7, right = 4` 给 2 ，这时候 2 就会把自己返回给 5 .
 

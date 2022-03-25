@@ -633,7 +633,7 @@ n = xyzdabc
 
 |                          $cur == 0$                          |                          $cur == 1$                          |                         $cur \ge 2$                          |
 | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
-| ![Figure-1](https://gitee.com/sinkinben/pic-go/raw/master/img/20201030211235.png) | ![Figure-2](https://gitee.com/sinkinben/pic-go/raw/master/img/20201030211332.png) | ![Figure-3](https://gitee.com/sinkinben/pic-go/raw/master/img/20201030211348.png) |
+| ![Figure-1](https://github.com/Sin-Kinben/PicGo/raw/master/img/20201030211235.png) | ![Figure-2](https://github.com/Sin-Kinben/PicGo/raw/master/img/20201030211332.png) | ![Figure-3](https://github.com/Sin-Kinben/PicGo/raw/master/img/20201030211348.png) |
 
 如上图 1 所示，如果 `cur == 0` , 那么在该位上的 1 的个数，将由 `high` 和 `low` 可变化的次数决定（简单排列组合问题）。显然在这里，可变化的范围是：高位取 `[0, high-1]`，低位取 `[0, 9]`，组合结果为 `high * 10 = 23 * 10 = 230` .
 
@@ -726,7 +726,7 @@ public:
 
 先看一张图（图源自上述题解）。
 
-<img src="https://gitee.com/sinkinben/pic-go/raw/master/img/20201031183620.png" style="width:80%;" />
+<img src="https://github.com/Sin-Kinben/PicGo/raw/master/img/20201031183620.png" style="width:80%;" />
 
 对于一位数，产生的序列长度为 $9 \times 1$ .
 

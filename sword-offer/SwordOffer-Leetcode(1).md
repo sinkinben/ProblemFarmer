@@ -144,7 +144,7 @@ public:
 
 首先计算空格数目, 然后数组后增加空间, 总长度为 `len + spaces * 2` .
 
-<img src="https://gitee.com/sinkinben/pic-go/raw/master/img/20201013154339.png" style="width:65%;" />
+<img src="https://github.com/Sin-Kinben/PicGo/raw/master/img/20201013154339.png" style="width:65%;" />
 
 开辟如上图所示的 2 个指针, 让 `p1` 从尾到头扫描. 
 
@@ -331,7 +331,7 @@ public:
 
 一图胜千言。
 
-<img src="https://gitee.com/sinkinben/pic-go/raw/master/img/20201014163608.png" style="width:60%;" />
+<img src="https://github.com/Sin-Kinben/PicGo/raw/master/img/20201014163608.png" style="width:60%;" />
 
 代码实现：
 
@@ -376,7 +376,7 @@ public:
 
 看图。
 
-<img src="https://gitee.com/sinkinben/pic-go/raw/master/img/20201014164653.png" style="width:67%;" />
+<img src="https://github.com/Sin-Kinben/PicGo/raw/master/img/20201014164653.png" style="width:67%;" />
 
 代码实现：
 
