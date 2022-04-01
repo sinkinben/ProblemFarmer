@@ -10,4 +10,5 @@ Leetcode-plus:
 - [311. Sparse Matrix Multiplication](https://leetcode-cn.com/problems/sparse-matrix-multiplication/)
 - [325. Maximum Size Subarray Sum Equals k](https://leetcode-cn.com/problems/maximum-size-subarray-sum-equals-k/)
 - [270. Closest Binary Search Tree Value](https://leetcode-cn.com/problems/closest-binary-search-tree-value/)
+- [588. Design In-Memory File System](https://leetcode-cn.com/problems/design-in-memory-file-system/)
 
