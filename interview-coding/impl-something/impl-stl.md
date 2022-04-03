@@ -217,6 +217,41 @@ public:
 
 
 
+
+
+## next_permutation
+
+Leetcode: [31. Next Permutation](https://leetcode.com/problems/next-permutation/)
+
+- From right to left, find 1st position that satisfies `nums[i] < nums[i + 1]`.
+- In range of `[i + 1, n)`, find the (right-most) min-value `nums[j]` among the elements who are `> nums[i]` .
+- Swap `nums[i]` and `nums[j]`.
+- Reverse the range `[i + 1, n)`.
+
+```cpp
+class Solution {
+public:
+    void nextPermutation(vector<int>& nums) {
+        int n = nums.size();
+        if (n <= 1) return;
+
+        int i = n - 2;
+        while (i >= 0 && !(nums[i] < nums[i + 1])) --i;
+
+        if (i >= 0)
+        {
+            int j = i + 1;
+            for (int k = i + 1; k < n; ++k)
+                if (nums[k] > nums[i] && nums[k] <= nums[j]) j = k;
+            swap(nums[i], nums[j]);
+        }
+        reverse(nums.begin() + i + 1, nums.end());
+    }
+};
+```
+
+
+
 ## iterator
 
 Implement a iterator of vector.

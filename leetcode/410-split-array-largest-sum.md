@@ -22,13 +22,13 @@ Leetcode: [410. 分割数组的最大值](https://leetcode-cn.com/problems/split
 输出：4
 ```
 
-<br/>
-
-**Solution**
-
 最大值极小化问题，一般可以通过：
 - 二分查找，枚举所有的可能的解，逐一验证，取最小值解决。
 - 区间动态规划。
+
+
+
+### 动态规划
 
 令 $dp[i, j]$ 表示 $[0, i]$ 范围内，分割为 $j$ 段之后，得到的子数组各自和的最小值，并令 $\text{sub}[i, j]$ 表示区间 $[i, j]$ 中所有元素的和。考虑第 $j$ 段的产生：
 
@@ -69,6 +69,50 @@ public:
                     dp[i][j] = min(dp[i][j], max(dp[k][j - 1], prefix[i + 1] - prefix[k + 1]));
 
         return dp[n - 1][m];
+    }
+};
+```
+
+
+
+### 二分查找
+
+- 二分的下界为数组的最大值，上界为所有元素之和。关键点在于如何判定 `m = (l + r) / 2` 是否为一个可行解。
+- 类似于滑动窗口 + 贪心，从左到右累加，如果小于等于待校验的 `val` ，那么可以放在同一个子数组。否则，需要一个新的子数组。
+- 时间复杂度 $O(n\log{\sum{\text{nums}}})$. 
+
+```cpp
+class Solution {
+public:
+    bool valid(vector<int> &nums, int m, int val)
+    {
+        int cnt = 1, sum = 0;
+        for (int x : nums)
+        {
+            if (sum + x <= val)
+                sum += x;
+            else
+            {
+                sum = x;
+                cnt += 1;
+            }
+        }
+        return cnt <= m;
+    }
+    int splitArray(vector<int>& nums, int m)
+    {
+        int l = *max_element(begin(nums), end(nums));
+        int r = INT_MAX;
+        /* Left bounder binary search. */
+        while (l < r)
+        {
+            int mid = l + (r - l) / 2;
+            if (valid(nums, m, mid))
+                r = mid;
+            else
+                l = mid + 1;
+        }
+        return l;
     }
 };
 ```
