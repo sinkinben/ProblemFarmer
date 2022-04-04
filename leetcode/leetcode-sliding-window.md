@@ -8,14 +8,19 @@
 Leetcode:
 
 - [3. 无重复字符的最长子串](https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/) - 非定长，最大窗口
+- [1004. 最大连续1的个数 III](https://leetcode-cn.com/problems/max-consecutive-ones-iii/) - 非定长，最大窗口
+- [1438. 绝对差不超过限制的最长连续子数组](https://leetcode-cn.com/problems/longest-continuous-subarray-with-absolute-diff-less-than-or-equal-to-limit/) - 非定长，最大窗口
 - [76. 最小覆盖子串](https://leetcode-cn.com/problems/minimum-window-substring/) - 非定长，最小窗口
+- [209. 长度最小的子数组](https://leetcode-cn.com/problems/minimum-size-subarray-sum/) - 非定长，最小窗口
 - [567. 字符串的排列](https://leetcode-cn.com/problems/permutation-in-string/) - 定长
 - [438. 找到字符串中所有字母异位词](https://leetcode-cn.com/problems/find-all-anagrams-in-a-string/) - 定长
 - [1297. 子串的最大出现次数](https://leetcode-cn.com/problems/maximum-number-of-occurrences-of-a-substring/) - 定长
 
 
 
-## 无重复字符的最长子串
+## 最大窗口
+
+### 无重复字符的最长子串
 
 非定长类型、求最大窗口。
 
@@ -43,9 +48,104 @@ public:
 };
 ```
 
+或者是：
+
+```cpp
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) 
+    {
+        int n = s.length();
+        int l = 0, r = 0;
+        unordered_set<char> table;
+        int ans = 0;
+        while (r < n)
+        {
+            while (table.count(s[r])) table.erase(s[l++]);
+            table.insert(s[r++]);
+            ans = max(ans, (int)table.size());
+        }
+        return ans;
+    }
+};
+```
 
 
-## 最小覆盖子串
+
+### [最大连续1的个数 III](https://leetcode-cn.com/problems/max-consecutive-ones-iii/)
+
+给定一个二进制数组 `nums` 和一个整数 `k`，如果可以翻转最多 `k` 个 `0` ，则返回 数组中连续 `1` 的最大个数。
+
+```text
+输入：nums = [1,1,1,0,0,0,1,1,1,1,0], K = 2
+输出：6
+解释：[1,1,1,0,0,1,1,1,1,1,1]
+粗体数字从 0 翻转到 1，最长的子数组长度为 6。
+```
+
+**Solution**
+
+最多允许窗口内有 K 个 0，求窗口的最大长度。
+
+- 每次窗口增大 1 ，如果 0 的个数超过了 K ，那么从左侧收缩，把 0 移出去。
+
+```cpp
+class Solution {
+public:
+    int longestOnes(vector<int>& nums, int k) {
+        int n = nums.size();
+        int l = 0, r = 0, res = 0, zero = 0;
+        while (r < n)
+        {
+            zero += nums[r++] == 0;
+            while (l < r && zero > k)
+                zero -= nums[l++] == 0;
+            res = max(res, r - l);
+        }
+        return res;
+    }
+};
+```
+
+模版写法：
+
+```cpp
+class Solution {
+public:
+    int longestOnes(vector<int>& nums, int k) {
+        int n = nums.size();
+        int l = 0, r = 0, res = 0, zero = 0;
+        while (r < n)
+        {
+            while (l < r && zero > k)  zero -= nums[l++] == 0;
+            while (r < n && zero <= k) zero += nums[r++] == 0;
+            if (zero <= k) res = max(res, n - l);
+            else res = max(res, r - 1 - l);
+        }
+        return res;
+    }
+};
+```
+
+需要注意的是：
+
+```cpp
+if (zero <= k) res = max(res, n - l);
+else res = max(res, r - 1 - l);
+```
+
+为什么呢？考虑 ` while (r < n && zero <= k)` 的条件：
+
+- 如果是因为打破了 `zero <= k` 而跳出循环，这时候 `nums[r - 2], nums[r - 1] == 0, nums[r]`，有效的窗口应为 `[l, r-1)` .
+- 如果是因为打破 `r < n` ，这时候有效窗口为 `[l, n)` 。
+
+本题推荐第一种写法。
+
+
+
+## 最小窗口
+
+### 最小覆盖子串
 
 非定长类型、求最小窗口。
 
@@ -86,11 +186,69 @@ public:
 
 
 
----
+### [长度最小的子数组](https://leetcode-cn.com/problems/minimum-size-subarray-sum/)
+
+给定一个含有 `n` 个正整数的数组和一个正整数 `target` 。
+
+找出该数组中满足其和 `>= target` 的长度最小的连续子数组 `[nums[l], nums[l+1], ..., nums[r-1], nums[r]]` ，并返回其长度。如果不存在符合条件的子数组，返回 0 .
+
+```text
+输入：target = 7, nums = [2,3,1,2,4,3]
+输出：2
+解释：子数组 [4,3] 是该条件下的长度最小的子数组。
+```
+
+<br/>
+
+**Solution**
+
+非定长，求最小窗口。
+
+```cpp
+class Solution {
+public:
+    int minSubArrayLen(int target, vector<int>& nums) {
+        int n = nums.size();
+        int l = 0, r = 0, sum = 0, res = INT_MAX;
+        while (r < n)
+        {
+            while (r < n && sum < target) sum += nums[r++];
+            while (l < r && sum >= target) sum -= nums[l++];
+            /* [l - 1, r) is the window */
+            if (l > 0 && sum + nums[l - 1] >= target)
+                res = min(res, r - l + 1);
+        }
+        return res == INT_MAX ? 0 : res;
+    }
+};
+```
+
+或者是：
+
+```cpp
+class Solution {
+public:
+    int minSubArrayLen(int target, vector<int>& nums) {
+        int n = nums.size();
+        int l = 0, r = 0, sum = 0, res = INT_MAX;
+        while (r < n)
+        {
+            sum += nums[r++];
+            while (l < r && sum >= target) sum -= nums[l++];
+            /* [l - 1, r) is the window */
+            if (l > 0 && sum + nums[l - 1] >= target)
+                res = min(res, r - l + 1);
+        }
+        return res == INT_MAX ? 0 : res;
+    }
+};
+```
 
 
 
-## 字符串的排列
+## 定长窗口
+
+### 字符串的排列
 
 给你两个字符串 `s1` 和 `s2` ，写一个函数来判断 `s2` 是否包含 `s1` 的排列。如果是，返回 `true` ；否则，返回 `false`。
 
@@ -132,7 +290,7 @@ public:
 
 
 
-## [找到字符串中所有字母异位词](https://leetcode-cn.com/problems/find-all-anagrams-in-a-string/)
+### [找到字符串中所有字母异位词](https://leetcode-cn.com/problems/find-all-anagrams-in-a-string/)
 
 给定两个字符串 `s` 和 `p`，找到 `s` 中所有 `p` 的 **异位词** 的子串，返回这些子串的起始索引。不考虑答案输出的顺序。
 
@@ -178,7 +336,7 @@ public:
 
 
 
-## [子串的最大出现次数](https://leetcode-cn.com/problems/maximum-number-of-occurrences-of-a-substring/)
+### [子串的最大出现次数](https://leetcode-cn.com/problems/maximum-number-of-occurrences-of-a-substring/)
 
 给你一个字符串 `s` ，请你返回满足以下条件且出现次数最大的 **任意** 子串的出现次数：
 
@@ -271,6 +429,8 @@ for (int i = 0; i < n; ++i)
         remove element[i - width] from the window;
     }
     add element[i] into the window;
+    if (window is satisfied with something)
+        ...
 }
 ```
 
@@ -290,11 +450,28 @@ while (r < n)
         add element[r] into the window;
         r++;
     }
-    if (window is satisfy something)
+    if (window is satisfied with something)
         ...
 }
 ```
 
-在内层循环中，是窗口左端 `l` 先移动，还是右端 `r` 先移动，取决于具体情况。
+在内层循环中：
 
-参考 [3. 无重复字符的最长子串](https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/) 和 [76. 最小覆盖子串](https://leetcode-cn.com/problems/minimum-window-substring/) 。
+- 如果是求最大窗口，那么需要「先左侧收缩，后右侧扩张」，以达到求最大窗口的目的。例如，[3. 无重复字符的最长子串](https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/)。
+- 如果是求最小窗口，那么需要「先右侧扩张，后左侧收缩」，以达到求最小窗口的目的。例如，[76. 最小覆盖子串](https://leetcode-cn.com/problems/minimum-window-substring/) 和 [209. 长度最小的子数组](https://leetcode-cn.com/problems/minimum-size-subarray-sum/) 。
+
+求最大或者最小窗口，其实最常用的是这个：
+
+```cpp
+int l = 0, r = 0;
+while (n < r)
+{
+    add element[r++] into the windows;
+    while (l < r && !condition)
+        remove element[l++] from the window;
+    
+    if (window is satisfied with something)
+        ...
+}
+```
+
