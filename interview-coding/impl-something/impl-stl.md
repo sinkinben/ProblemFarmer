@@ -88,8 +88,7 @@ push_heap(vec.begin(), vec.end());
 Similar to the code above, we implement `push_heap` like this:
 
 ```cpp
-/**
- * Push an new element into the heap. After this function,
+/* Push an new element into the heap. After this function,
  * the size of `heap` will increase by 1.
  */
 void push_heap(vector<int> &heap, int x)
@@ -248,6 +247,51 @@ public:
         reverse(nums.begin() + i + 1, nums.end());
     }
 };
+```
+
+
+
+## upper_bound and lower_bound
+
+They are used to find the index that `key` should be inserted to, in range of `[begin, end)`. After inserting `key` at this index, the input sequence still keeps order.
+
+For example, if  `nums = [0, 1, 1, 1, 2]` , then:
+
+- `upper_bound(nums, key = 1)` should return 5.
+- `upper_bound(nums, key = 2)` should return 6.
+- `lower_bound(nums, key = 1)` should return 1.
+- `lower_bound(nums, key = 2)` should return 5.
+
+**upper_bound**
+
+```cpp
+int upper_bound(vector<int> &nums, int key)
+{
+    int l = 0, r = nums.size();
+    while (l < r)
+    {
+        int m = l + (r - l) / 2;
+        if (key < nums[m])       r = m;
+        else if (key >= nums[m]) l = m + 1;
+    }
+    return l;
+}
+```
+
+**lower_bound**
+
+```cpp
+int lower_bound(vector<int> &nums, int key)
+{
+    int l = 0, r = nums.size();
+    while (l < r)
+    {
+        int m = l + (r - l) / 2;
+        if (key <= nums[m])     r = m;
+        else if (key > nums[m]) l = m + 1;
+    }
+    return l;
+}
 ```
 
 

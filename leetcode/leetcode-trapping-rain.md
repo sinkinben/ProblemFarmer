@@ -2,6 +2,7 @@
 
 - [42. Trapping Rain Water](https://leetcode.com/problems/trapping-rain-water/)
 - [407. Trapping Rain Water II](https://leetcode.com/problems/trapping-rain-water-ii/)
+- [11. Container With Most Water](https://leetcode.com/problems/container-with-most-water/)
 
 
 
@@ -10,6 +11,16 @@
 ## Trapping Rain Water
 
 Leetcode: https://leetcode.com/problems/trapping-rain-water/
+
+Given `n` non-negative integers representing an elevation map where the width of each bar is `1`, compute how much water it can trap after raining.
+
+<img src="https://assets.leetcode.com/uploads/2018/10/22/rainwatertrap.png" />
+
+```text
+Input: height = [0,1,0,2,1,0,1,3,2,1,2,1]
+Output: 6
+Explanation: The above elevation map (black section) is represented by array [0,1,0,2,1,0,1,3,2,1,2,1]. In this case, 6 units of rain water (blue section) are being trapped.
+```
 
 **Dynamic Programming**
 
@@ -70,6 +81,15 @@ public:
 
 Leetcode: https://leetcode.com/problems/trapping-rain-water-ii/
 
+Given an `m x n` integer matrix `heightMap` representing the height of each unit cell in a 2D elevation map, return *the volume of water it can trap after raining*.
+
+<img src="https://assets.leetcode.com/uploads/2021/04/08/trap2-3d.jpg" />
+
+```text
+Input: heightMap = [[3,3,3,3,3],[3,2,2,2,3],[3,2,1,2,3],[3,2,2,2,3],[3,3,3,3,3]]
+Output: 10
+```
+
 Refer to [this solution](https://leetcode-cn.com/problems/trapping-rain-water-ii/solution/jie-yu-shui-ii-by-leetcode-solution-vlj3/).
 
 **Min-Heap**
@@ -128,6 +148,54 @@ public:
             }
         }
         return res;
+    }
+};
+```
+
+
+
+## Container With Most Water 
+
+Leetcode: https://leetcode.com/problems/container-with-most-water/
+
+You are given an integer array `height` of length `n`. There are `n` vertical lines drawn such that the two endpoints of the `ith` line are `(i, 0)` and `(i, height[i])`.
+
+Find two lines that together with the x-axis form a container, such that the container contains the most water.
+
+Return *the maximum amount of water a container can store*.
+
+**Notice** that you may not slant the container.
+
+<img src="https://s3-lc-upload.s3.amazonaws.com/uploads/2018/07/17/question_11.jpg" style="width:50%"/>
+
+```text
+Input: height = [1,8,6,2,5,4,8,3,7]
+Output: 49
+Explanation: The above vertical lines are represented by array [1,8,6,2,5,4,8,3,7]. In this case, the max area of water (blue section) the container can contain is 49.
+```
+
+<br/>
+
+**Solution**
+
+The brute force solution is $O(n^2)$, it will TLE. Consider using double-pointers to solve it.
+
+- The area of container is limited by two factors: one is the distance between two bounders, i.e. `r - l`, the another is min height between `height[l]` and `height[r]` , i.e. `min(height[l], height[r])`.
+- Base on double-pointers, each iteration in the loop, the distance is as large as possible, and we need to make the bounders as high as possible.
+
+```cpp
+class Solution {
+public:
+    int maxArea(vector<int>& height) {
+        int n = height.size();
+        int area = 0, l = 0, r = n - 1;
+        while (l < r)
+        {
+            area = max(area, (r - l) * min(height[l], height[r]));
+            if (height[l] <= height[r]) l++;
+            else r--;
+        }
+        return area;
     }
 };
 ```
