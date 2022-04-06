@@ -151,7 +151,7 @@ public:
 
 
 
-## Follow Up
+## Wildcard Matching
 
 There is another problem [44. Wildcard Matching](https://leetcode.com/problems/wildcard-matching/), which is similar to the regex-matching problem here.
 

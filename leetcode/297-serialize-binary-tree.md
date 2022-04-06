@@ -109,3 +109,44 @@ TreeNode *levelDeserialize(string &data)
 }
 ```
 
+
+
+## 前序遍历实现
+
+利用 `stringstream` .
+
+```cpp
+class Codec {
+public:
+    const string nil = "#";
+    const string sep = " ";
+    string val;
+    // Encodes a tree to a single string.
+    string serialize(TreeNode* node) {
+        if (node == nullptr)
+            return nil;
+        return to_string(node->val) + sep + serialize(node->left) + sep + serialize(node->right);
+    }
+
+    // Decodes your encoded data to tree.
+    TreeNode* deserialize(string data) {
+        stringstream ss(data);
+        return deserialize(ss);
+    }
+
+    TreeNode* generate(string &val) {
+        return (val == nil || val.empty()) ? nullptr : new TreeNode(stoi(val));
+    }
+
+    TreeNode* deserialize(stringstream &ss) {
+        val.clear();
+        TreeNode *node = nullptr;
+        if (!(ss >> val) || (node = generate(val)) == nullptr)
+            return nullptr;
+        node->left = deserialize(ss);
+        node->right = deserialize(ss);
+        return node;
+    }
+};
+```
+
