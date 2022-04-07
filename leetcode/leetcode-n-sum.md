@@ -130,22 +130,18 @@ Implement the `TwoSum` class:
 The problem mainly examines searching in the sorted data structures. Here we use `unordered_map`, and `add` will cost `O(1)` time, and `find` will cost `O(n)` time.
 
 ```cpp
-class TwoSum
-{
+class TwoSum {
 public:
     unordered_map<int64_t, int> cnt;
-    void add(int x) { cnt[x]++; }
-    bool find(int val)
-    {
+    
+    void add(int number) { ++cnt[number]; }
+    
+    bool find(int value) {
         for (auto [k, v] : cnt)
         {
-            cnt[k] -= 1;
-            if (cnt.count(val - k) && cnt[val - k] > 0)
-            {
-                cnt[k] += 1;
+            if ((value - k == k && cnt[k] >= 2) || 
+                (value - k != k && cnt.count(value - k) && cnt[value - k] > 0)) 
                 return true;
-            }
-            cnt[k] += 1;
         }
         return false;
     }
