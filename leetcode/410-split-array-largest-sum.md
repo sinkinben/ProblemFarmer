@@ -101,6 +101,7 @@ public:
     }
     int splitArray(vector<int>& nums, int m)
     {
+        /* l = 0 is wrong, the left bounder should be max_element */
         int l = *max_element(begin(nums), end(nums));
         int r = INT_MAX;
         /* Left bounder binary search. */
