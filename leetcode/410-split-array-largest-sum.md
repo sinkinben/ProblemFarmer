@@ -84,6 +84,10 @@ public:
 ```cpp
 class Solution {
 public:
+    /* Divide nums into some sub-arrays. For each sub-array,
+     * SUM(sub-array) <= val, under such limitation, can we
+     * divide nums into m sub-arrays?
+     */
     bool valid(vector<int> &nums, int m, int val)
     {
         int cnt = 1, sum = 0;
@@ -104,7 +108,7 @@ public:
         /* l = 0 is wrong, the left bounder should be max_element */
         int l = *max_element(begin(nums), end(nums));
         int r = INT_MAX;
-        /* Left bounder binary search. */
+        /* [l, r) is equivalent to [l, m), m, [m + 1, r) */
         while (l < r)
         {
             int mid = l + (r - l) / 2;
