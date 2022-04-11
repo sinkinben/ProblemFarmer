@@ -7,7 +7,7 @@ Leetcode:
 
 
 
-## Code Template
+## Template
 
 ```cpp
 struct node_t
@@ -20,13 +20,14 @@ unordered_map<int, unordered_map<int, int>> graph;
 /* @n - There are `n` vertices in the graph.
  * @start - The source of shortest path.
  * @return - The length of shortest path from `start` to the others vertices.
+ * The number of vertices in range of [0, n).
  */
 vector<int> dijkstra(int n, int start)
 {
     vector<bool> vis(n, false);
     vector<int> dis(n, 0x3f3f3f3f);
     dis[start] = 0;
-    priority_queue<node_t> q;
+    priority_queue<node_t> q;  // min-heap
     q.emplace(start, 0);
     while (!q.empty())
     {
@@ -50,7 +51,80 @@ vector<int> dijkstra(int n, int start)
 
 
 
-## Network Delay Time
+## Print the Path
+
+Acwing: https://www.acwing.com/problem/content/description/4199/
+
+Print one of the shortest path.
+
+```cpp
+const int64_t INF = LLONG_MAX / 2;
+struct node_t
+{
+    int64_t vex, cost;
+    node_t(int64_t v, int64_t c) : vex(v), cost(c) {}
+    bool operator<(const node_t &n) const { return cost > n.cost; }
+};
+unordered_map<int, unordered_map<int, int>> graph;
+/* @n - There are `n` vertices in the graph.
+ * @start - The source of shortest path.
+ * @return - The length of shortest path from `start` to the others vertices.
+ * @pre - pre.size == n, and filled with -1.
+ * The number of vertices in range of [0, n).
+ */
+vector<int64_t> dijkstra(int n, int start, vector<int> &pre)
+{
+    // pre = vector<int>(n, -1);
+    vector<bool> vis(n, false);
+    vector<int64_t> dis(n, INF);
+    dis[start] = 0;
+    priority_queue<node_t> q; // min-heap
+    q.emplace(start, 0);
+    while (!q.empty())
+    {
+        int u = q.top().vex;
+        q.pop();
+        if (vis[u])
+            continue;
+        vis[u] = true;
+        // graph[u][v] = c
+        for (auto [v, c] : graph[u])
+        {
+            if (!vis[v] && dis[v] > dis[u] + c)
+            {
+                dis[v] = dis[u] + c;
+                q.emplace(v, dis[v]);
+                pre[v] = u;
+            }
+        }
+    }
+    return dis;
+}
+
+/* Print the shortest path to `dest`. Such path must exist.
+ * The `start` is detemined by dijkstra.
+ * @pre - The returned value of `dijkstra`.
+ */
+vector<int> getPath(vector<int64_t> &dis, vector<int> &pre, int dest)
+{
+    if (dis[dest] == INF) return {};
+    int vex = dest;
+    vector<int> path{vex};
+    while (pre[vex] != -1)
+    {
+        path.emplace_back(pre[vex]);
+        vex = pre[vex];
+    }
+    reverse(begin(path), end(path));
+    return path;
+}
+```
+
+
+
+## Leetcode
+
+### Network Delay Time
 
 Leetcode: https://leetcode.com/problems/network-delay-time/
 
@@ -122,7 +196,7 @@ public:
 
 
 
-## Number of Ways to Arrive at Destination
+### Number of Ways to Arrive at Destination
 
 Leetcode: https://leetcode.com/problems/number-of-ways-to-arrive-at-destination/
 
