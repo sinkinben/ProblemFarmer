@@ -1,11 +1,17 @@
 ## Bit Mask DP
 
-Leetcode:
+Bitmask DP on Leetcode:
 
 - [698. Partition to K Equal Sum Subsets](https://leetcode.com/problems/partition-to-k-equal-sum-subsets/)
   - See `leetcode-k-partition-equal-sum.md`
 - [1723. Find Minimum Time to Finish All Jobs](https://leetcode-cn.com/problems/find-minimum-time-to-finish-all-jobs/)
   - See `1723-min-time-finish-jobs.md`
+- [2035. Partition Array Into Two Arrays to Minimize Sum Difference](https://leetcode.com/problems/partition-array-into-two-arrays-to-minimize-sum-difference/)
+  - See `2035.md`
+
+- [1755. Closest Subsequence Sum](https://leetcode.com/problems/closest-subsequence-sum/)
+  - See `1755.md`
+
 
 
 

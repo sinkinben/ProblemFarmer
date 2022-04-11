@@ -32,11 +32,16 @@ Usually, we have two strategies to solve Min-max or max-min problems.
 **Group - 2**
 
 - [1986. Minimum Number of Work Sessions to Finish the Tasks](https://leetcode-cn.com/problems/minimum-number-of-work-sessions-to-finish-the-tasks/)
-  - Put items into `n` boxes, the size of each box is `sessionTime`, minimize such number `n`.
 
-- [875. Koko Eating Bananas](https://leetcode-cn.com/problems/koko-eating-bananas/)
-  - Put `n` items into `h` boxes, we can divide one item into some pieces.
-  - Each piece of item should be: `piece <= box.size`, minimize the size of the box `size`.
+  - Put items into `n` boxes, the size of each box is `sessionTime`, minimize such number `n`.
+  - 每个盒子的大小固定为 `size` ，每个物品有固定的体积，一个盒子可以放入多个物品（如果放得下）。目标：最小化盒子的数量。
+
+- [2064. Minimized Maximum of Products Distributed to Any Store](https://leetcode-cn.com/problems/minimized-maximum-of-products-distributed-to-any-store/)
+
+  - 每个物品有一定数量，分配到 `k` 个盒子中，每个盒子只能放一种物品，目标：最小化「所有盒子中物品数量的最大值」。
+  - [875. Koko Eating Bananas](https://leetcode-cn.com/problems/koko-eating-bananas/) - Same as 2064.
+
+  
 
 **Others**
 
