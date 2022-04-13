@@ -8,10 +8,10 @@ Bitmask DP on Leetcode:
   - See `1723-min-time-finish-jobs.md`
 - [2035. Partition Array Into Two Arrays to Minimize Sum Difference](https://leetcode.com/problems/partition-array-into-two-arrays-to-minimize-sum-difference/)
   - See `2035.md`
-
 - [1755. Closest Subsequence Sum](https://leetcode.com/problems/closest-subsequence-sum/)
   - See `1755.md`
-
+- [1494. Parallel Courses II](https://leetcode-cn.com/problems/parallel-courses-ii/)
+  - See `leetcode-parallel-courses.md`.
 
 
 
