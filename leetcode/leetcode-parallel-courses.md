@@ -119,7 +119,7 @@ public:
         /* x denote the subset courses that are finished. */
         for (int x = 0; x < (1 << n); ++x)
         {
-            /* `next` denote that in the remained courses (not finished course),
+            /* in the remained courses (not finished course), `next` denote 
              * all the courses that their prerequisites are finished. 
              */
             int next = 0;
