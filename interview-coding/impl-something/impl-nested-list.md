@@ -67,14 +67,14 @@ class NestedList
     /* Insert list at the front. */
     NestedNode *PushFront(const NestedList &list)
     {
-        assert(this != &list);
+        assert(this != &list && head != list.head);
         return Insert(head, 1, (uint64_t)list.head);
     }
 
     /* Insert element after `pos`. */
     NestedNode *Insert(NestedNode *pos, uint8_t islist, uint64_t element)
     {
-        assert(pos != nullptr && element != (uint64_t)(head));
+        assert(pos != nullptr);
         auto node = new NestedNode(islist, element, pos->next);
         pos->next = node;
         return node;
