@@ -50,3 +50,6 @@ Usually, we have two strategies to solve Min-max or max-min problems.
 
   - Use min days to get max number of bouquets.
 - [774. Minimize Max Distance to Gas Station](https://leetcode-cn.com/problems/minimize-max-distance-to-gas-station/)
+- [1631. Path With Minimum Effort](https://leetcode.com/problems/path-with-minimum-effort/)
+
+  - Solution: https://www.cnblogs.com/sinkinben/p/16204077.html

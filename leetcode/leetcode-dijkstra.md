@@ -2,8 +2,8 @@
 
 Leetcode:
 
-- [743. Network Delay Time](https://leetcode.com/problems/network-delay-time/)
-- [1976. Number of Ways to Arrive at Destination](https://leetcode.com/problems/number-of-ways-to-arrive-at-destination/)
+- [743. Network Delay Time](https://leetcode.com/problems/network-delay-time/) - Standard Dijkstra
+- [1976. Number of Ways to Arrive at Destination](https://leetcode.com/problems/number-of-ways-to-arrive-at-destination/) - Number of Shortest Paths
 
 
 
@@ -53,7 +53,7 @@ vector<int> dijkstra(int n, int start)
 
 ## Print the Path
 
-Acwing: https://www.acwing.com/problem/content/description/4199/
+Exercises: https://www.acwing.com/problem/content/description/4199/
 
 Print one of the shortest path.
 
@@ -70,7 +70,7 @@ unordered_map<int, unordered_map<int, int>> graph;
  * @start - The source of shortest path.
  * @return - The length of shortest path from `start` to the others vertices.
  * @pre - pre.size == n, and filled with -1.
- * The number of vertices in range of [0, n).
+ * The number of each vertex is in range of [0, n).
  */
 vector<int64_t> dijkstra(int n, int start, vector<int> &pre)
 {
@@ -102,8 +102,9 @@ vector<int64_t> dijkstra(int n, int start, vector<int> &pre)
 }
 
 /* Print the shortest path to `dest`. Such path must exist.
- * The `start` is detemined by dijkstra.
- * @pre - The returned value of `dijkstra`.
+ * The `start` is defined by dijkstra.
+ * @pre - The result argument of `dijkstra`.
+ * @dis - The returned value of `dijkstra`.
  */
 vector<int> getPath(vector<int64_t> &dis, vector<int> &pre, int dest)
 {
@@ -204,7 +205,7 @@ You are in a city that consists of `n` intersections numbered from `0` to `n - 1
 
 You are given an integer `n` and a 2D integer array `roads` where `roads[i] = [ui, vi, timei]` means that there is a road between intersections `ui` and `vi` that takes `timei` minutes to travel. You want to know in how many ways you can travel from intersection `0` to intersection `n - 1` in the **shortest amount of time**.
 
-Return *the **number of ways** you can arrive at your destination in the **shortest amount of time***. Since the answer may be large, return it **modulo** `109 + 7`.
+Return *the **number of ways** you can arrive at your destination in the **shortest amount of time***. Since the answer may be large, return it **modulo** `1e9 + 7`.
 
 <img src="https://assets.leetcode.com/uploads/2021/07/17/graph2.png" style="background: white; width:20%"/>
 
@@ -221,7 +222,7 @@ The four ways to get there in 7 minutes are:
 
 **Solution**
 
-The problem here is to get the number of shortest path.
+The problem here is to **get the number of shortest path.**
 
 Let `dp[i]` denote the number of shortest path from `start` to `i` in Dijkstra algorithm. Then we have
 $$
