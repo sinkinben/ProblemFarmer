@@ -58,7 +58,7 @@ template <class T, class Deleter = DefaultDeleter<T>> class shared_pointer {
 
     uint32_t get_count() const { return *refcnt; }
     T *operator->() const { return ptr; }
-    virtual ~shared_pointer() { clear(); }
+    virtual ~shared_pointer() { if (refcnt != nullptr) clear(); }
 
   private:
     void clear() {

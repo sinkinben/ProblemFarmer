@@ -47,7 +47,7 @@ freq = {{2, 2}, {3, 1}}
 
 如果当前的前缀 `[0, i]` 满足下面 3 种情况之一，那么 `len = i + 1` 是一个有效前缀的长度。
 - `maxFreq == 1`，说明每个元素 `nums[i]` 各不相同，只出现了一次。
-- `maxFreq * freq[maxFreq] + 1== len`，说明有一个值出现了一次，其他值均出现 `maxFreq` 次。
+- `maxFreq * freq[maxFreq] + 1 == len`，说明有一个值出现了一次，其他值均出现 `maxFreq` 次。
 - `(maxFreq - 1) * freq[maxFreq - 1] + maxFreq == len`，有一个值出现了 `maxFreq` 次，其它值均出现 `maxFreq - 1` 次。这时我们可以把前者删除一个。
 	- 举个例子，`[1, 1, 2, 2, 3, 3, 4, 4, 4]`。
 	- 扫描完整个数组，`maxFreq = 3, freq = {{2, 3}, {3, 1}}`
