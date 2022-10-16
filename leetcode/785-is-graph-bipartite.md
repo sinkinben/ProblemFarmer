@@ -1,5 +1,8 @@
 ## 785. Is Graph Bipartite
 
+> - 关键词：二分图判定
+> - 类似题目：[886. 可能的二分法](https://leetcode.cn/problems/possible-bipartition/)
+
 Leetcode: [785. Is Graph Bipartite?](https://leetcode.com/problems/is-graph-bipartite/)
 
 Difficulty: **Medium**  
@@ -88,7 +91,7 @@ public:
     {
         if (colors[x] != -1)
             return colors[x] == cur;
-​
+
         colors[x] = cur;
         for (int next : graph[x])
         {
