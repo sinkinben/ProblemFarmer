@@ -2,10 +2,10 @@
 
 Problems:
 
-- [112. Path Sum](https://leetcode.com/problems/path-sum/)
-- [113. Path Sum II](https://leetcode.com/problems/path-sum-ii/)
-- [437. Path Sum III](https://leetcode.com/problems/path-sum-iii/)
-- [666. Path Sum IV](https://leetcode-cn.com/problems/path-sum-iv/)
+- [112. Path Sum](https://leetcode.com/problems/path-sum/): 给定 `sum`，问是否存在 `root` 到叶子的路径，其和为 `sum` （前序遍历）。
+- [113. Path Sum II](https://leetcode.com/problems/path-sum-ii/)：给定 `sum`，返回所有 `root` 到叶子，且和为 `sum` 的路径（前序遍历）。
+- [437. Path Sum III](https://leetcode.com/problems/path-sum-iii/): 给定 `sum`，返回和为 `sum` 的路径的数量，此处的「路径」不需要从根开始，也不需要在叶子结束，但路径必须是向下延伸的（前序遍历 + 前缀和）。
+- [666. Path Sum IV](https://leetcode-cn.com/problems/path-sum-iv/)：给定 `nums`，它以特殊形式存储了一棵二叉树。求所有「路径和」之和。此处的路径是从根到叶子的路径。
 
 
 
@@ -45,32 +45,29 @@ public:
 ## Path Sum II
 
 ```cpp
+using vec = vector<int>;
+using vec2 = vector<vec>;
 class Solution {
 public:
-    vector<vector<int>> res;
-    vector<vector<int>> pathSum(TreeNode* root, int target) 
+    vec2 res;
+    vec path;
+    vec2 pathSum(TreeNode* root, int target)
     {
-        vector<int> path;
-        preorder(root, 0, path, target);
+        preorder(root, target, 0);
         return res;
     }
-    
-    void preorder(TreeNode *node, int sum, vector<int> path, int target)
+
+    void preorder(TreeNode *node, int target, int cur)
     {
-        if (node == nullptr) return;
-        sum += node->val;
-        path.push_back(node->val);
-        
-        if (!node->left && !node->right && sum == target)
-        {
+        if (!node) return;
+
+        cur += node->val, path.push_back(node->val);
+        if (!node->left && !node->right && cur == target)
             res.emplace_back(path);
-            return;
-        }
-        
-        preorder(node->left, sum, path, target);
-        preorder(node->right, sum, path, target);
-        path.pop_back();
-        
+
+        preorder(node->left, target, cur);
+        preorder(node->right, target, cur);
+        cur -= node->val, path.pop_back();
     }
 };
 ```
@@ -78,6 +75,8 @@ public:
 
 
 ## Path Sum III
+
+**前缀和**
 
 ```cpp
 class Solution 
@@ -106,7 +105,36 @@ public:
 };
 ```
 
+**哈希 + 前缀和计数**
 
+```cpp
+class Solution {
+public:
+    unordered_map<int64_t, int> mp = {{0, 1}};
+    int res = 0;
+    int pathSum(TreeNode* root, int target)
+    {
+        preorder(root, 0, target);
+        return res;
+    }
+    
+    void preorder(TreeNode *node, int64_t sum, int target)
+    {
+        if (node == nullptr)
+            return;
+        
+        sum += node->val;
+        // sum - x == target, then x = sum - target
+        if (mp.count(sum - target))
+            res += mp[sum - target];
+        
+        mp[sum]++;
+        preorder(node->left, sum, target);
+        preorder(node->right, sum, target);
+        mp[sum]--;
+    }
+};
+```
 
 
 
