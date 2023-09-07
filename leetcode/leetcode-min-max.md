@@ -38,10 +38,13 @@ Usually, we have two strategies to solve Min-max or max-min problems.
 
 - [2064. Minimized Maximum of Products Distributed to Any Store](https://leetcode-cn.com/problems/minimized-maximum-of-products-distributed-to-any-store/)
 
-  - 每个物品有一定数量，分配到 `k` 个盒子中，每个盒子只能放一种物品，目标：最小化「所有盒子中物品数量的最大值」。
+  - 给定若干种物品，每个物品有一定数量，分配到 `k` 个盒子中，每个盒子只能放一种物品（数量可任意），目标：最小化「所有盒子中物品数量的最大值」。
   - [875. Koko Eating Bananas](https://leetcode-cn.com/problems/koko-eating-bananas/) - Same as 2064.
 
+- [2594. 修车的最少时间](https://leetcode.cn/problems/minimum-time-to-repair-cars/)
   
+  - 与上面类似，有 `n` 个汽车需要维修，需要分配到 `k` 个工人手上，工人所耗费工时的计算方式为 `ranks[i] * t * t`（`t` 表示分配到工人 `i` 的汽车数目）。目标：最小化「所有工人中的最大工时」。
+
 
 **Others**
 
