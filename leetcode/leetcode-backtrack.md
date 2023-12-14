@@ -2,6 +2,8 @@
 
 The backtracking solutions of most leetcode-problems have a similar pattern. Let's take a look on it.
 
+
+
 ## Subset
 
 **1. Recursion (Backtrack)** - Time complexity is `O(2^n)`, and the depth of recursion is `O(n)`.
@@ -130,7 +132,7 @@ public:
 
 It's a little similar to "Subset - Iteration" above, but not totally. [See this explanation](https://leetcode.wang/leetCode-90-SubsetsII.html).
 
-<img src="https://windliang.oss-cn-beijing.aliyuncs.com/90_2.jpg" style="width: 50%"/>
+<img src="https://raw.githubusercontent.com/Sin-Kinben/PicGo/master/leetcode-subset-ii.jpg" style="width: 50%"/>
 
 For "Interation Solution" of Subset, in the internal loop, we traverse all elements in the `subs`. Here we can not do so, since there are duplicate numbers.
 
