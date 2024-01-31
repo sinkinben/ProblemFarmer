@@ -12,6 +12,9 @@ Bitmask DP on Leetcode:
   - See `1755.md`
 - [1494. Parallel Courses II](https://leetcode-cn.com/problems/parallel-courses-ii/)
   - See `leetcode-parallel-courses.md`.
+- [1239. Maximum Length of a Concatenated String with Unique Characters](https://leetcode.com/problems/maximum-length-of-a-concatenated-string-with-unique-characters/)
+  - See `1239-max-length-concat-string.md`
+
 
 
 
