@@ -10,6 +10,10 @@
 
 - [1074. Number of Submatrices That Sum to Target](https://leetcode.com/problems/number-of-submatrices-that-sum-to-target/)：给定二维矩阵 `mat` 和整数 `target`，求和为 `target` 的子矩阵的数量。
 
+二叉树形式：
+
+- [437. Path Sum III](https://leetcode.cn/problems/path-sum-iii/)：给定二叉树 `root` 和整数 `target` ，求和为 `target` 的路径的数量。**路径**不需要从根节点开始，也不需要在叶子节点结束，但是路径方向必须是向下的（只能从父节点到子节点）。
+
 
 
 ## [523. Continuous Subarray Sum](https://leetcode.com/problems/continuous-subarray-sum/description/)
@@ -302,4 +306,60 @@ public:
     }
 };
 ```
+
+
+
+## [437. Path Sum III](https://leetcode.cn/problems/path-sum-iii/)
+
+给定一个二叉树的根节点 `root` ，和一个整数 `targetSum` ，求该二叉树里节点值之和等于 `targetSum` 的 **路径** 的数目。
+
+**路径**不需要从根节点开始，也不需要在叶子节点结束，但是路径方向必须是向下的（只能从父节点到子节点）。
+
+**Example 1:**
+
+<img src="https://assets.leetcode.com/uploads/2021/04/09/pathsum3-1-tree.jpg" style="width:40%"/>
+
+```text
+Input: root = [10,5,-3,3,2,null,11,3,-2,null,1], targetSum = 8
+Output: 3
+Explanation: The paths that sum to 8 are shown.
+```
+
+<br/>
+
+**Solution**
+
+将每一个从根节点到叶子结点的通路，看作一个连续的数组，本题即可通过 [560. 和为 K 的子数组](https://leetcode.com/problems/subarray-sum-equals-k/) 的算法解决。
+
+```cpp
+class Solution {
+public:
+    unordered_map<int64_t, int> mp = {{0, 1}};
+    int res = 0;
+    int pathSum(TreeNode* root, int targetSum)
+    {
+        preorder(root, 0, targetSum);
+        return res;
+    }
+
+    void preorder(TreeNode *node, int64_t sum, int target)
+    {
+        if (node == nullptr)
+            return;
+        sum += node->val;
+
+        // suppose prefix[j] = sum - target, prefix[i] = sum, 
+        // prefix[i] - prefix[j], this means we have the range whose sum is target
+        if (mp.count(sum - target))
+            res += mp[sum - target];
+        mp[sum]++;
+        preorder(node->left, sum, target);
+        preorder(node->right, sum, target);
+        if ((--mp[sum]) == 0)
+            mp.erase(sum);
+    }
+};
+```
+
+
 

@@ -112,26 +112,27 @@ class Solution {
 public:
     unordered_map<int64_t, int> mp = {{0, 1}};
     int res = 0;
-    int pathSum(TreeNode* root, int target)
+    int pathSum(TreeNode* root, int targetSum)
     {
-        preorder(root, 0, target);
+        preorder(root, 0, targetSum);
         return res;
     }
-    
+
     void preorder(TreeNode *node, int64_t sum, int target)
     {
         if (node == nullptr)
             return;
-        
         sum += node->val;
-        // sum - x == target, then x = sum - target
+
+        // suppose prefix[j] = sum - target, prefix[i] = sum, 
+        // prefix[i] - prefix[j], this means we have the range whose sum is target
         if (mp.count(sum - target))
             res += mp[sum - target];
-        
         mp[sum]++;
         preorder(node->left, sum, target);
         preorder(node->right, sum, target);
-        mp[sum]--;
+        if ((--mp[sum]) == 0)
+            mp.erase(sum);
     }
 };
 ```

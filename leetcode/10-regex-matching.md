@@ -25,12 +25,11 @@ Let `dp[i, j]` be true if `s[1 ... i]` matches `p[1 ... j]`. And the state equat
 Please note that the index of `s` and `p` in the program start with `0`, which is a little different from the state equations above.
 
 ```cpp
-class Solution 
-{
+class Solution {
 public:
-    bool isMatch(string s, string p) 
-    {
-        int slen = s.length(), plen = p.length();
+    bool isMatch(string s, string p) {
+        int slen = s.length();
+        int plen = p.length();
         vector<vector<bool>> dp(slen + 1, vector<bool>(plen + 1, false));
         dp[0][0] = true;
         // Note that s = "", can match p = "a*b*c*", hence `i` should be start with 0
@@ -38,21 +37,23 @@ public:
         {
             for (int j = 1; j <= plen; ++j)
             {
-                /* the index of '*' in `p`, must be >= 1, otherwise `p` is invalid,
-                 * i.e. (j - 1 >= 1) ==> (j >= 2)
-                 */
                 if (p[j - 1] == '*')
                 {
-                    dp[i][j] = dp[i][j -  2] || 
-                               (i > 0 && dp[i - 1][j] && (s[i - 1] == p[j - 2] || p[j - 2] == '.'));
+                    assert(j >= 2);
+                    char pre = p[j - 2];
+                    dp[i][j] = dp[i][j - 2] ||                       // 'x*' match nothing
+                    (i >= 1 && dp[i - 1][j] && s[i - 1] == pre) ||   // current char s[i - 1] match 'x'
+                    (i >= 1 && dp[i - 1][j] && pre == '.');          // '.*' can match anything
                 }
-                else if (i > 0 && (p[j - 1] == '.' || s[i - 1] == p[j - 1]))
+                else if (i >= 1 && (p[j - 1] == '.' || s[i - 1] == p[j - 1]))
                 {
+                    // current pattern p[j - 1] = '.', can match s[i - 1], 
+                    // or p[j - 1] = s[i - 1] = 'x' is common letter 
                     dp[i][j] = dp[i - 1][j - 1];
                 }
-                
             }
         }
+
         return dp[slen][plen];
     }
 };
@@ -70,7 +71,7 @@ Please note that you should know the concept of DFA before you read this article
 
 For a pattern `p = "a.b*c"`, we can construct such a DFA:
 
-<img src="https://github.com/Sin-Kinben/PicGo/raw/master/img/20220121134600.png" style="background: #fff"/>
+<img src="https://raw.githubusercontent.com/Sin-Kinben/PicGo/master/img/20220121134600.png" style="background: #fff"/>
 
 The `'$'` sign means that, we do not need any character to reach next state, since `'*'` matches **zero** or more of the preceding element. 
 
